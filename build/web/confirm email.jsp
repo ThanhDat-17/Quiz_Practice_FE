@@ -62,7 +62,8 @@
                                 <div class="form-group">
                                     <div class="input-group">
                                         <label>Enter your Email</label>
-                                        <input name="email" type="email" required class="form-control">
+                                        
+                                        <input name="email" type="email" required class="form-control"> <!-- type bằng email trình duyệt tự validate -->
                                     </div>
                                 </div>
                             </div>
