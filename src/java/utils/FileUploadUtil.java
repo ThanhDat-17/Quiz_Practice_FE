@@ -25,8 +25,16 @@ public class FileUploadUtil {
      * @throws IOException If an error occurs during file upload
      */
     public static String uploadFile(Part part, String uploadDir, ServletContext context) throws IOException {
+        // Validate part
+        if (part == null || part.getSize() == 0) {
+            throw new IOException("No file selected for upload");
+        }
+        
         // Get the application's real path
         String applicationPath = context.getRealPath("/");
+        if (applicationPath == null) {
+            applicationPath = context.getRealPath("");
+        }
         
         // Create the upload directory if it doesn't exist
         String uploadPath = applicationPath + File.separator + uploadDir.replace("/", File.separator);
@@ -38,14 +46,30 @@ public class FileUploadUtil {
         
         // Get the original filename and create a unique filename
         String originalFileName = getFileName(part);
+        if (originalFileName == null || originalFileName.isEmpty()) {
+            throw new IOException("Invalid filename");
+        }
+        
+        // Check if filename has extension
+        if (!originalFileName.contains(".")) {
+            throw new IOException("File must have an extension");
+        }
+        
         String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
         String uniqueFileName = UUID.randomUUID().toString() + fileExtension;
         
         // Save the file
-        part.write(uploadPath + File.separator + uniqueFileName);
+        String fullPath = uploadPath + File.separator + uniqueFileName;
+        part.write(fullPath);
         
-        // Return the path relative to web application root
-        return uploadDir + "/" + uniqueFileName;
+        // Verify file was created
+        File uploadedFile = new File(fullPath);
+        if (!uploadedFile.exists()) {
+            throw new IOException("File upload failed - file not created");
+        }
+        
+        // Return the filename only (not full path)
+        return uniqueFileName;
     }
     
     /**

@@ -100,6 +100,9 @@
                         <a class="nav-link active" href="${pageContext.request.contextPath}/admin/blog">
                             <i class="fas fa-blog"></i> Blog Management
                         </a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/admin/subject">
+                            <i class="fas fa-book"></i> Subject Management
+                        </a>
                         <a class="nav-link" href="#">
                             <i class="fas fa-users"></i> User Management
                         </a>

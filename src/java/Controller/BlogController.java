@@ -1,4 +1,4 @@
-package controller;
+package Controller;
 
 import dao.BlogDAO;
 import model.Blog;
