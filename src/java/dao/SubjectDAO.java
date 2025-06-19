@@ -21,7 +21,7 @@ public class SubjectDAO {
     // Get all subjects with pagination
     public List<Subject> getAllSubjects(int page, int pageSize) {
         List<Subject> subjects = new ArrayList<>();
-        String sql = "SELECT s.subject_id, s.subject_name, s.subject_image, s.is_active, " +
+        String sql = "SELECT s.subject_id, s.subject_name, s.subject_image, s.description, s.is_active, " +
                     "s.category_id, c.category_name " +
                     "FROM subjects s LEFT JOIN categories c ON s.category_id = c.category_id " +
                     "ORDER BY s.subject_id " +
@@ -48,7 +48,7 @@ public class SubjectDAO {
     public List<Subject> searchSubjects(String searchName, Integer categoryId, int page, int pageSize) {
         List<Subject> subjects = new ArrayList<>();
         StringBuilder sql = new StringBuilder(
-            "SELECT s.subject_id, s.subject_name, s.subject_image, s.is_active, " +
+            "SELECT s.subject_id, s.subject_name, s.subject_image, s.description, s.is_active, " +
             "s.category_id, c.category_name " +
             "FROM subjects s LEFT JOIN categories c ON s.category_id = c.category_id WHERE 1=1"
         );
@@ -144,7 +144,7 @@ public class SubjectDAO {
 
     // Get subject by ID
     public Subject getSubjectById(int subjectId) {
-        String sql = "SELECT s.subject_id, s.subject_name, s.subject_image, s.is_active, " +
+        String sql = "SELECT s.subject_id, s.subject_name, s.subject_image, s.description, s.is_active, " +
                     "s.category_id, c.category_name " +
                     "FROM subjects s LEFT JOIN categories c ON s.category_id = c.category_id " +
                     "WHERE s.subject_id = ?";
@@ -166,13 +166,14 @@ public class SubjectDAO {
 
     // Insert new subject
     public boolean insertSubject(Subject subject) {
-        String sql = "INSERT INTO subjects (subject_name, subject_image, is_active, category_id) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO subjects (subject_name, subject_image, description, is_active, category_id) VALUES (?, ?, ?, ?, ?)";
         
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, subject.getSubjectName());
             ps.setString(2, subject.getSubjectImage());
-            ps.setBoolean(3, subject.isActive());
-            ps.setInt(4, subject.getCategoryId());
+            ps.setString(3, subject.getDescription());
+            ps.setBoolean(4, subject.isActive());
+            ps.setInt(5, subject.getCategoryId());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -182,14 +183,15 @@ public class SubjectDAO {
 
     // Update subject
     public boolean updateSubject(Subject subject) {
-        String sql = "UPDATE subjects SET subject_name = ?, subject_image = ?, is_active = ?, category_id = ? WHERE subject_id = ?";
+        String sql = "UPDATE subjects SET subject_name = ?, subject_image = ?, description = ?, is_active = ?, category_id = ? WHERE subject_id = ?";
         
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, subject.getSubjectName());
             ps.setString(2, subject.getSubjectImage());
-            ps.setBoolean(3, subject.isActive());
-            ps.setInt(4, subject.getCategoryId());
-            ps.setInt(5, subject.getSubjectId());
+            ps.setString(3, subject.getDescription());
+            ps.setBoolean(4, subject.isActive());
+            ps.setInt(5, subject.getCategoryId());
+            ps.setInt(6, subject.getSubjectId());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -216,6 +218,7 @@ public class SubjectDAO {
         subject.setSubjectId(rs.getInt("subject_id"));
         subject.setSubjectName(rs.getString("subject_name"));
         subject.setSubjectImage(rs.getString("subject_image"));
+        subject.setDescription(rs.getString("description"));
         subject.setActive(rs.getBoolean("is_active"));
         subject.setCategoryId(rs.getInt("category_id"));
         subject.setCategoryName(rs.getString("category_name"));

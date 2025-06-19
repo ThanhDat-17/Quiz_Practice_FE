@@ -173,6 +173,14 @@
                                 <label for="showName">Name</label>
                             </div>
                             <div class="column-checkbox">
+                                <input type="checkbox" id="showImage" checked onchange="toggleColumn('image-column')">
+                                <label for="showImage">Image</label>
+                            </div>
+                            <div class="column-checkbox">
+                                <input type="checkbox" id="showDescription" checked onchange="toggleColumn('description-column')">
+                                <label for="showDescription">Description</label>
+                            </div>
+                            <div class="column-checkbox">
                                 <input type="checkbox" id="showCategory" checked onchange="toggleColumn('category-column')">
                                 <label for="showCategory">Category</label>
                             </div>
@@ -205,12 +213,9 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="pageSize">Items per page:</label>
-                                    <select class="form-control" id="pageSize" name="pageSize" onchange="this.form.submit()">
-                                        <option value="5" ${pageSize eq 5 ? 'selected' : ''}>5</option>
-                                        <option value="10" ${pageSize eq 10 ? 'selected' : ''}>10</option>
-                                        <option value="20" ${pageSize eq 20 ? 'selected' : ''}>20</option>
-                                        <option value="50" ${pageSize eq 50 ? 'selected' : ''}>50</option>
-                                    </select>
+                                    <input type="number" class="form-control" id="pageSize" name="pageSize" 
+                                           value="${pageSize}" min="1" max="100" 
+                                           onchange="this.form.submit()" placeholder="10">
                                 </div>
                                 <div class="form-group">
                                     <button type="submit" class="btn btn-primary">
@@ -266,7 +271,8 @@
                                         <tr>
                                             <th class="id-column">ID</th>
                                             <th class="name-column">Name</th>
-                                            <th>Image</th>
+                                            <th class="image-column">Image</th>
+                                            <th class="description-column">Description</th>
                                             <th class="category-column">Category</th>
                                             <th class="status-column">Status</th>
                                             <th>Action</th>
@@ -277,7 +283,7 @@
                                             <tr>
                                                 <td class="id-column">${subject.subjectId}</td>
                                                 <td class="name-column">${subject.subjectName}</td>
-                                                <td>
+                                                <td class="image-column">
                                                     <c:if test="${not empty subject.subjectImage}">
                                                         <img src="${pageContext.request.contextPath}/assets/images/blog/uploaded/${subject.subjectImage}" 
                                                              class="subject-image" alt="Subject Image">
@@ -286,6 +292,18 @@
                                                         <img src="${pageContext.request.contextPath}/assets/images/blog/default/thum1.jpg" 
                                                              class="subject-image" alt="Default Image">
                                                     </c:if>
+                                                </td>
+                                                <td class="description-column">
+                                                    <c:choose>
+                                                        <c:when test="${not empty subject.description}">
+                                                            <div class="text-truncate" style="max-width: 200px;" title="${subject.description}">
+                                                                ${subject.description}
+                                                            </div>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <span class="text-muted">No Description</span>
+                                                        </c:otherwise>
+                                                    </c:choose>
                                                 </td>
                                                 <td class="category-column">
                                                     <c:choose>
@@ -394,6 +412,12 @@
                             </div>
                         </div>
 
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="3" 
+                                      placeholder="Enter subject description"></textarea>
+                        </div>
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
@@ -462,6 +486,7 @@
                     document.getElementById('subjectId').value = data.subjectId;
                     document.getElementById('subjectName').value = data.subjectName;
                     document.getElementById('subjectImage').value = data.subjectImage;
+                    document.getElementById('description').value = data.description || '';
                     document.getElementById('modalCategoryId').value = data.categoryId;
                     document.getElementById('isActive').checked = data.isActive;
                 })

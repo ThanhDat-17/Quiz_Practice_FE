@@ -188,6 +188,7 @@ public class SubjectController extends HttpServlet {
         json.append("\"subjectId\":").append(subject.getSubjectId()).append(",");
         json.append("\"subjectName\":\"").append(subject.getSubjectName()).append("\",");
         json.append("\"subjectImage\":\"").append(subject.getSubjectImage() != null ? subject.getSubjectImage() : "").append("\",");
+        json.append("\"description\":\"").append(subject.getDescription() != null ? subject.getDescription() : "").append("\",");
         json.append("\"isActive\":").append(subject.isActive()).append(",");
         json.append("\"categoryId\":").append(subject.getCategoryId());
         json.append("}");
@@ -210,6 +211,7 @@ public class SubjectController extends HttpServlet {
         try {
             String subjectName = request.getParameter("subjectName");
             String subjectImage = request.getParameter("subjectImage");
+            String description = request.getParameter("description");
             boolean isActive = request.getParameter("isActive") != null;
             int categoryId = Integer.parseInt(request.getParameter("categoryId"));
             
@@ -233,6 +235,7 @@ public class SubjectController extends HttpServlet {
             Subject subject = new Subject();
             subject.setSubjectName(subjectName);
             subject.setSubjectImage(subjectImage);
+            subject.setDescription(description);
             subject.setActive(isActive);
             subject.setCategoryId(categoryId);
 
@@ -259,6 +262,7 @@ public class SubjectController extends HttpServlet {
             int subjectId = Integer.parseInt(request.getParameter("subjectId"));
             String subjectName = request.getParameter("subjectName");
             String subjectImage = request.getParameter("subjectImage");
+            String description = request.getParameter("description");
             boolean isActive = request.getParameter("isActive") != null;
             int categoryId = Integer.parseInt(request.getParameter("categoryId"));
 
@@ -283,6 +287,7 @@ public class SubjectController extends HttpServlet {
             subject.setSubjectId(subjectId);
             subject.setSubjectName(subjectName);
             subject.setSubjectImage(subjectImage);
+            subject.setDescription(description);
             subject.setActive(isActive);
             subject.setCategoryId(categoryId);
 

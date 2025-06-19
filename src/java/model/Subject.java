@@ -6,6 +6,7 @@ public class Subject implements Serializable {
     private int subjectId;
     private String subjectName;
     private String subjectImage;
+    private String description;
     private boolean isActive;
     private int categoryId;
     private String categoryName; // For display purposes
@@ -14,10 +15,11 @@ public class Subject implements Serializable {
     public Subject() {}
 
     // Constructor with all fields
-    public Subject(int subjectId, String subjectName, String subjectImage, boolean isActive, int categoryId) {
+    public Subject(int subjectId, String subjectName, String subjectImage, String description, boolean isActive, int categoryId) {
         this.subjectId = subjectId;
         this.subjectName = subjectName;
         this.subjectImage = subjectImage;
+        this.description = description;
         this.isActive = isActive;
         this.categoryId = categoryId;
     }
@@ -71,12 +73,21 @@ public class Subject implements Serializable {
         this.categoryName = categoryName;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public String toString() {
         return "Subject{" +
                 "subjectId=" + subjectId +
                 ", subjectName='" + subjectName + '\'' +
                 ", subjectImage='" + subjectImage + '\'' +
+                ", description='" + description + '\'' +
                 ", isActive=" + isActive +
                 ", categoryId=" + categoryId +
                 ", categoryName='" + categoryName + '\'' +
