@@ -10,8 +10,8 @@ package utils;
  */
 public class validation {
     // kiểm tra định dạng gmail
-     public static boolean isValidEmail(String email) {
-        String regex = "^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$";
+    public static boolean isValidEmail(String email) {
+        String regex = "^[^@\\s]+@[^@\\s]+\\.[^@\\s]{2,}$";
         return email != null && email.matches(regex);
     }
 }

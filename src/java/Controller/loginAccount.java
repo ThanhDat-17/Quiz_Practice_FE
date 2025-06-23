@@ -37,105 +37,67 @@ public class loginAccount extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        HttpSession session = request.getSession();
-// đăng nhập sai 5 lần sẽ phải đợi 1 phút //
-        Integer loginAttempts = (Integer) session.getAttribute("loginAttempts");  // số lần đăng nhập sai liên tiếp
-        Long lockTime = (Long) session.getAttribute("lockTime");   // thời điểm bắt đầu khoá
-// thời gian hiên tại - tgian khoá < 60s, tbao khoá và chuyển về trang login
-        if (lockTime != null) {
-            long currentTime = System.currentTimeMillis();
-            if (currentTime - lockTime < 60 * 1000) {
-                request.setAttribute("error", "You have entered incorrect credentials more than 5 times. Please try again after 1 minute.");
-                request.getRequestDispatcher("login.jsp").forward(request, response);
-                return;
-            } else {
- // hết tgian thì xoá 2 thuộc tính và bắt đầu đăng nhập lại
-                session.removeAttribute("lockTime");
-                session.removeAttribute("loginAttempts");
-                loginAttempts = 0;
-            }
-        }
-// lấy tt người dùng từ login, loại bỏ khoảng trắng
-        String username = request.getParameter("username").trim();
-        String password = request.getParameter("password").trim();
-        
-        // Kiểm tra định dạng email
-        if (!validation.isValidEmail(username)) {
-            request.setAttribute("error", "Incorrect email format (missing @ or .).");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-            return;
-        }
-        
-        LoginDAO loginDAO = new LoginDAO();
-        Users userByEmail = loginDAO.getUserByEmail(username);
-        
-      if (userByEmail == null) {
-            // Email không tồn tại trong database
-            if (loginAttempts == null) loginAttempts = 1;
-            else loginAttempts++;
-            session.setAttribute("loginAttempts", loginAttempts);
-            if (loginAttempts >= 5) {
-                session.setAttribute("lockTime", System.currentTimeMillis());
-                request.setAttribute("error", "You have entered incorrect credentials more than 5 times. Please try again after 1 minute.");
-            } else {
-                request.setAttribute("error", "Incorrect or unregistered account.");
-            }
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-            return;
-        }
+protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    HttpSession session = request.getSession();
 
-        // Kiểm tra mật khẩu đúng không
-        if (!userByEmail.getPassword().equals(password)) {
-            if (loginAttempts == null) loginAttempts = 1;
-            else loginAttempts++;
-            session.setAttribute("loginAttempts", loginAttempts);
-            if (loginAttempts >= 5) {
-                session.setAttribute("lockTime", System.currentTimeMillis());
-                request.setAttribute("error", "You have entered incorrect credentials more than 5 times. Please try again after 1 minute.");
-            } else {
-                request.setAttribute("error", "Password is incorrect.");
-            }
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-            return;
-        }
+    // Lấy thông tin người dùng từ form, loại bỏ khoảng trắng
+    String username = request.getParameter("username").trim();
+    String password = request.getParameter("password").trim();
 
-        if (!userByEmail.getIsActive()) {
-            request.setAttribute("error", "Account locked.");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-            return;
-        }
-
-        // Đăng nhập thành công
-        session.removeAttribute("loginAttempts");
-        session.removeAttribute("lockTime");
-        session.setAttribute("user", userByEmail);
-
-        switch (userByEmail.getRoleId()) {
-            case 1:
-                response.sendRedirect("customer.jsp");
-                break;
-            case 2:
-                response.sendRedirect("expert.jsp");
-                break;
-            case 3:
-                response.sendRedirect("admin.jsp");
-                break;
-            case 4:
-                response.sendRedirect("sale.jsp");
-                break;
-            case 5:
-                response.sendRedirect("marketing screen.jsp");
-                break;
-            default:
-                response.sendRedirect("login.jsp");
-                break;
-        }
+    // Kiểm tra định dạng email
+    if (!validation.isValidEmail(username)) {
+        request.setAttribute("error", "Incorrect email format (missing @ or .).");
+        request.getRequestDispatcher("login.jsp").forward(request, response);
+        return;
     }
 
-    @Override
-    public String getServletInfo() {
-        return "Short description";
+    LoginDAO loginDAO = new LoginDAO();
+    Users userByEmail = loginDAO.getUserByEmail(username);
+
+    if (userByEmail == null) {
+        // Email không tồn tại trong database
+        request.setAttribute("error", "Incorrect or unregistered account.");
+        request.getRequestDispatcher("login.jsp").forward(request, response);
+        return;
     }
+
+    // Kiểm tra mật khẩu
+    if (!userByEmail.getPassword().equals(password)) {
+        request.setAttribute("error", "Password is incorrect.");
+        request.getRequestDispatcher("login.jsp").forward(request, response);
+        return;
+    }
+
+    // nếu tk bị khoá
+    if (!userByEmail.getIsActive()) {
+        request.setAttribute("error", "Account locked.");
+        request.getRequestDispatcher("login.jsp").forward(request, response);
+        return;
+    }
+
+    // Đăng nhập thành công
+    session.setAttribute("user", userByEmail);
+
+    switch (userByEmail.getRoleId()) {
+        case 1:
+            response.sendRedirect("customer.jsp");
+            break;
+        case 2:
+            response.sendRedirect("expert.jsp");
+            break;
+        case 3:
+            response.sendRedirect("subjectDimension");
+            break;
+        case 4:
+            response.sendRedirect("sale.jsp");
+            break;
+        case 5:
+            response.sendRedirect("marketing screen.jsp");
+            break;
+        default:
+            response.sendRedirect("login.jsp");
+            break;
+    }
+}
 }

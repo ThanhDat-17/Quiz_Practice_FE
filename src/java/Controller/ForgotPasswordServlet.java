@@ -32,7 +32,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 
     // Kiểm tra định dạng email
         if (!validation.isValidEmail(email)) {
-            request.setAttribute("error", "Incorrect email format (missing @ or .).");
+            request.setAttribute("error", "Incorrect email format (.).");
             request.getRequestDispatcher("confirm email.jsp").forward(request, response);
             return;
         }
