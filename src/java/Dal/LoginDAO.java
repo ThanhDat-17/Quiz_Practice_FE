@@ -42,4 +42,39 @@ public class LoginDAO {
 
         return user;
     }
+    
+    // Thêm method getUserByEmail (tìm user chỉ theo email)
+    public Users getUserByEmail(String email) {
+        Users user = null;
+        String query = "SELECT * FROM users WHERE email = ?";
+        Connection conn = new DBContext().getConnection();
+
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, email);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    user = new Users(
+                            rs.getInt("user_id"),
+                            rs.getDate("created_date"),
+                            rs.getString("description"),
+                            rs.getString("email"),
+                            rs.getString("full_name"),
+                            rs.getBoolean("is_active"),
+                            rs.getString("password"),
+                            rs.getString("profile_image"),
+                            rs.getDate("updated_date"),
+                            rs.getDate("date_of_birth"),
+                            rs.getBoolean("gender"),
+                            rs.getString("phone")
+                    );
+                    user.setRoleId(rs.getInt("role_id"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return user;
+    }
 }

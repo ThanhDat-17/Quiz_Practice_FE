@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import utils.EmailUtil;
+import utils.validation;
 
 @WebServlet("/forgot-password")
 public class ForgotPasswordServlet extends HttpServlet {
@@ -29,6 +30,13 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
     UserDAO userDAO = new UserDAO();
     Users user = userDAO.findUserByEmail(email);
 
+    // Kiểm tra định dạng email
+        if (!validation.isValidEmail(email)) {
+            request.setAttribute("error", "Incorrect email format (.).");
+            request.getRequestDispatcher("confirm email.jsp").forward(request, response);
+            return;
+        }
+        
     // Nếu không tìm thấy email
     if (user == null) {
         request.setAttribute("error", "Email does not exist!");
