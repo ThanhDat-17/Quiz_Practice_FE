@@ -1,0 +1,41 @@
+-- Sample data for categories table
+INSERT INTO categories (category_name) VALUES 
+('Basic English'),
+('Mathematics'),
+('Computer Science'),
+('Advanced English'),
+('Literature'),
+('History'),
+('Geography'),
+('Physics'),
+('Chemistry'),
+('Biology');
+
+-- Sample data for subjects table
+INSERT INTO subjects (subject_name, subject_image, is_active, category_id) VALUES 
+('English Introduction', 'sample.png', 1, 1),
+('Grammar Basics', 'sample.png', 1, 1),
+('Vocabulary Building', 'sample.png', 1, 1),
+('Elementary Mathematics', NULL, 1, 2),
+('Algebra Fundamentals', NULL, 1, 2),
+('Calculus and Analysis', NULL, 1, 2),
+('Java Programming', 'sample.png', 1, 3),
+('Data Structures & Algorithms', NULL, 1, 3),
+('Database Management', NULL, 1, 3),
+('Advanced English Grammar', 'sample.png', 1, 4),
+('Business English Communication', NULL, 1, 4),
+('Academic Writing', NULL, 1, 4),
+('English Literature Analysis', NULL, 1, 5),
+('Creative Writing Workshop', NULL, 1, 5),
+('Poetry and Drama', NULL, 1, 5),
+('World History Overview', NULL, 1, 6),
+('Modern History', NULL, 1, 6),
+('Physical Geography', NULL, 1, 7),
+('Human Geography', NULL, 1, 7),
+('Classical Physics', NULL, 1, 8),
+('Modern Physics', NULL, 1, 8),
+('Organic Chemistry', NULL, 1, 9),
+('Inorganic Chemistry Lab', NULL, 1, 9),
+('Cell Biology', NULL, 1, 10),
+('Molecular Biology', NULL, 1, 10),
+('Inactive Subject Example', NULL, 0, 1); 

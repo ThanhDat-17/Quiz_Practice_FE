@@ -39,16 +39,16 @@
                     <div class="account-container">
                         <div class="heading-bx left">
                             <h2 class="title-head">Login</h2>
-                            <p>You don’t have an account,  <a href="register.html">CREATE NOW</a></p>
+                            <p>You don’t have an account,  <a href="register.html">Create now</a></p>
                         </div>	
 
-                        <!-- ✅ form login gửi về loginAccount bằng method post-->
+                        <!-- ✅ FORM LOGIN gửi về LoginServlet bằng POST -->
                         <form class="contact-bx" action="loginAccount" method="post">
                             <div class="row placeani">
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <div class="input-group">
-                                            <label>Email</label>
+                                            <label>Username</label>
                                             <input name="username" type="text" required class="form-control">
                                         </div>
                                     </div>
@@ -65,7 +65,7 @@
 
                                 <div class="col-lg-12">
                                     <div class="form-group form-forget">
-                                        <a href="confirm email.jsp" class="ml-auto"><i><u>Forgot Password?</u></i></a>
+                                        <a href="forget-password.html" class="ml-auto"><i><u>Forgot Password?</u></i></a>
                                     </div>
                                 </div>
 
@@ -76,13 +76,8 @@
                             </div>
 
                             <!-- Hiển thị lỗi nếu có -->
-                            <div>
-                                <c:if test="${not empty message}">
-                                    <span style="color: green;">${message}</span>
-                                </c:if>
-                                <c:if test="${not empty error}">
-                                    <span style="color: red;">${error}</span>
-                                </c:if>
+                            <div style="color:red;">
+                                ${error}
                             </div>
                         </form>
                     </div>
