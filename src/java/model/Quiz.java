@@ -1,7 +1,7 @@
 package model;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Timestamp;
 
 public class Quiz implements Serializable {
     private int quizId;
@@ -9,54 +9,30 @@ public class Quiz implements Serializable {
     private String description;
     private int subjectId;
     private String subjectName; // For display purposes
-    private String level; // EASY, MEDIUM, HARD
+    private String level; // Basic, Intermediate, Advanced
     private int duration; // Duration in minutes
     private double passRate; // Pass rate percentage (0-100)
-    private String quizType; // PRACTICE, MOCK_TEST, ASSIGNMENT
+    private String type; // Practice, Exam, Assignment
     private int numberOfQuestions;
     private boolean isActive;
-    private Date createdDate;
-    private Date updatedDate;
+    private Timestamp createdDate;
+    private Timestamp updatedDate;
     private int createdBy;
-    private String createdByName; // For display purposes
 
     // Default constructor
     public Quiz() {}
 
     // Constructor with essential fields
     public Quiz(String quizName, String description, int subjectId, String level, 
-                int duration, double passRate, String quizType, int numberOfQuestions, 
-                boolean isActive, int createdBy) {
+                int duration, double passRate, String type, boolean isActive) {
         this.quizName = quizName;
         this.description = description;
         this.subjectId = subjectId;
         this.level = level;
         this.duration = duration;
         this.passRate = passRate;
-        this.quizType = quizType;
-        this.numberOfQuestions = numberOfQuestions;
+        this.type = type;
         this.isActive = isActive;
-        this.createdBy = createdBy;
-    }
-
-    // Full constructor
-    public Quiz(int quizId, String quizName, String description, int subjectId, 
-                String level, int duration, double passRate, String quizType, 
-                int numberOfQuestions, boolean isActive, Date createdDate, 
-                Date updatedDate, int createdBy) {
-        this.quizId = quizId;
-        this.quizName = quizName;
-        this.description = description;
-        this.subjectId = subjectId;
-        this.level = level;
-        this.duration = duration;
-        this.passRate = passRate;
-        this.quizType = quizType;
-        this.numberOfQuestions = numberOfQuestions;
-        this.isActive = isActive;
-        this.createdDate = createdDate;
-        this.updatedDate = updatedDate;
-        this.createdBy = createdBy;
     }
 
     // Getters and Setters
@@ -124,12 +100,12 @@ public class Quiz implements Serializable {
         this.passRate = passRate;
     }
 
-    public String getQuizType() {
-        return quizType;
+    public String getType() {
+        return type;
     }
 
-    public void setQuizType(String quizType) {
-        this.quizType = quizType;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public int getNumberOfQuestions() {
@@ -148,19 +124,19 @@ public class Quiz implements Serializable {
         isActive = active;
     }
 
-    public Date getCreatedDate() {
+    public Timestamp getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(Timestamp createdDate) {
         this.createdDate = createdDate;
     }
 
-    public Date getUpdatedDate() {
+    public Timestamp getUpdatedDate() {
         return updatedDate;
     }
 
-    public void setUpdatedDate(Date updatedDate) {
+    public void setUpdatedDate(Timestamp updatedDate) {
         this.updatedDate = updatedDate;
     }
 
@@ -172,45 +148,17 @@ public class Quiz implements Serializable {
         this.createdBy = createdBy;
     }
 
-    public String getCreatedByName() {
-        return createdByName;
-    }
-
-    public void setCreatedByName(String createdByName) {
-        this.createdByName = createdByName;
-    }
-
-    // Helper methods for displaying formatted values
-    public String getLevelDisplay() {
-        switch (level.toUpperCase()) {
-            case "EASY": return "Easy";
-            case "MEDIUM": return "Medium";
-            case "HARD": return "Hard";
-            default: return level;
+    public String getShortDescription() {
+        if (description == null || description.isEmpty()) {
+            return "";
         }
-    }
-
-    public String getQuizTypeDisplay() {
-        switch (quizType.toUpperCase()) {
-            case "PRACTICE": return "Practice";
-            case "MOCK_TEST": return "Mock Test";
-            case "ASSIGNMENT": return "Assignment";
-            default: return quizType;
+        // Strip HTML tags
+        String plainText = description.replaceAll("<[^>]*>", "");
+        // Truncate to 100 characters
+        if (plainText.length() > 100) {
+            return plainText.substring(0, 100) + "...";
         }
-    }
-
-    public String getStatusDisplay() {
-        return isActive ? "Active" : "Inactive";
-    }
-
-    public String getDurationDisplay() {
-        if (duration < 60) {
-            return duration + " minutes";
-        } else {
-            int hours = duration / 60;
-            int minutes = duration % 60;
-            return hours + "h " + (minutes > 0 ? minutes + "m" : "");
-        }
+        return plainText;
     }
 
     @Override
@@ -218,19 +166,10 @@ public class Quiz implements Serializable {
         return "Quiz{" +
                 "quizId=" + quizId +
                 ", quizName='" + quizName + '\'' +
-                ", description='" + description + '\'' +
-                ", subjectId=" + subjectId +
                 ", subjectName='" + subjectName + '\'' +
                 ", level='" + level + '\'' +
-                ", duration=" + duration +
-                ", passRate=" + passRate +
-                ", quizType='" + quizType + '\'' +
-                ", numberOfQuestions=" + numberOfQuestions +
+                ", type='" + type + '\'' +
                 ", isActive=" + isActive +
-                ", createdDate=" + createdDate +
-                ", updatedDate=" + updatedDate +
-                ", createdBy=" + createdBy +
-                ", createdByName='" + createdByName + '\'' +
                 '}';
     }
 } 

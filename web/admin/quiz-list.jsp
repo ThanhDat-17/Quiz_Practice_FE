@@ -13,8 +13,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <!-- SweetAlert2 -->
-    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.19/dist/sweetalert2.min.css" rel="stylesheet">
     
     <style>
         .sidebar {
@@ -42,10 +40,6 @@
             border: none;
             border-radius: 15px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-        .card:hover {
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
         }
         .btn-primary {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -59,28 +53,22 @@
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
         }
         .btn-success {
-            background: linear-gradient(135deg, #20bf6b 0%, #26d0ce 100%);
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
             border: none;
-            border-radius: 25px;
-            padding: 8px 20px;
+            border-radius: 20px;
+            padding: 5px 15px;
         }
         .btn-warning {
-            background: linear-gradient(135deg, #f7b731 0%, #fd79a8 100%);
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             border: none;
-            border-radius: 25px;
-            padding: 8px 20px;
+            border-radius: 20px;
+            padding: 5px 15px;
         }
         .btn-danger {
-            background: linear-gradient(135deg, #ee5a52 0%, #f093fb 100%);
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
             border: none;
-            border-radius: 25px;
-            padding: 8px 20px;
-        }
-        .table {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            padding: 5px 15px;
         }
         .table th {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -88,39 +76,15 @@
             border: none;
             font-weight: 600;
             text-align: center;
-            vertical-align: middle;
         }
         .table td {
             vertical-align: middle;
             text-align: center;
-            border: none;
-            border-bottom: 1px solid #e9ecef;
-        }
-        .table tbody tr:hover {
-            background-color: #f8f9fa;
-            transform: scale(1.01);
-            transition: all 0.3s ease;
         }
         .badge {
             border-radius: 15px;
             padding: 8px 15px;
             font-size: 0.75rem;
-            font-weight: 600;
-        }
-        .badge-success {
-            background: linear-gradient(135deg, #20bf6b 0%, #26d0ce 100%);
-        }
-        .badge-danger {
-            background: linear-gradient(135deg, #ee5a52 0%, #f093fb 100%);
-        }
-        .badge-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        .badge-warning {
-            background: linear-gradient(135deg, #f7b731 0%, #fd79a8 100%);
-        }
-        .badge-info {
-            background: linear-gradient(135deg, #3742fa 0%, #2f3542 100%);
         }
         .alert {
             border-radius: 15px;
@@ -131,69 +95,29 @@
             margin-bottom: 30px;
             font-weight: 700;
         }
-        .filter-section {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            margin-bottom: 25px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .search-controls {
-            display: flex;
-            gap: 15px;
-            align-items: end;
-            flex-wrap: wrap;
-        }
-        .search-controls .form-group {
-            flex: 1;
-            min-width: 200px;
-        }
-        .search-controls .btn {
-            height: fit-content;
-        }
-        .pagination .page-link {
-            border-radius: 50px;
-            margin: 0 3px;
-            border: none;
-            color: #667eea;
-        }
-        .pagination .page-item.active .page-link {
+        .search-card {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
+            color: white;
+        }
+        .form-control, .form-select {
+            border-radius: 10px;
+            border: 1px solid #ddd;
         }
         .stats-card {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
         }
-        .level-easy { background: linear-gradient(135deg, #20bf6b 0%, #26d0ce 100%) !important; }
-        .level-medium { background: linear-gradient(135deg, #f7b731 0%, #fd79a8 100%) !important; }
-        .level-hard { background: linear-gradient(135deg, #ee5a52 0%, #f093fb 100%) !important; }
-        .type-practice { background: linear-gradient(135deg, #3742fa 0%, #2f3542 100%) !important; }
-        .type-mock-test { background: linear-gradient(135deg, #f7b731 0%, #fd79a8 100%) !important; }
-        .type-assignment { background: linear-gradient(135deg, #ee5a52 0%, #f093fb 100%) !important; }
-        .modal-content {
-            border-radius: 15px;
-            border: none;
+        .level-badge {
+            font-size: 0.7rem;
+            padding: 4px 8px;
         }
-        .modal-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 15px 15px 0 0;
+        .quiz-actions {
+            white-space: nowrap;
         }
-        .form-control:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
-        }
-        .action-buttons {
-            display: flex;
-            gap: 5px;
-            justify-content: center;
-        }
-        .action-buttons .btn {
-            padding: 5px 10px;
+        .quiz-actions .btn {
+            margin: 0 2px;
+            padding: 4px 8px;
             font-size: 0.8rem;
         }
     </style>
@@ -235,57 +159,9 @@
                         <h2 class="page-title">
                             <i class="fas fa-question-circle text-primary"></i> Quiz Management
                         </h2>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#quizModal" onclick="openCreateModal()">
+                        <a href="${pageContext.request.contextPath}/admin/quiz?action=add" class="btn btn-primary">
                             <i class="fas fa-plus"></i> Create New Quiz
-                        </button>
-                    </div>
-
-                    <!-- Statistics Cards -->
-                    <div class="row mb-4">
-                        <div class="col-md-3">
-                            <div class="stats-card">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <h5>Total Quizzes</h5>
-                                        <h3>${totalQuizzes}</h3>
-                                    </div>
-                                    <i class="fas fa-question-circle fa-2x"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="stats-card">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <h5>Current Page</h5>
-                                        <h3>${currentPage}</h3>
-                                    </div>
-                                    <i class="fas fa-file-alt fa-2x"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="stats-card">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <h5>Page Size</h5>
-                                        <h3>${pageSize}</h3>
-                                    </div>
-                                    <i class="fas fa-list fa-2x"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="stats-card">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <h5>Total Pages</h5>
-                                        <h3>${totalPages}</h3>
-                                    </div>
-                                    <i class="fas fa-pager fa-2x"></i>
-                                </div>
-                            </div>
-                        </div>
+                        </a>
                     </div>
 
                     <!-- Alert Messages -->
@@ -299,400 +175,247 @@
                         <c:remove var="messageType" scope="session"/>
                     </c:if>
 
-                    <!-- Filter and Search Section -->
-                    <div class="filter-section">
-                        <h5 class="mb-3"><i class="fas fa-filter"></i> Search & Filter</h5>
-                        <form method="post" action="${pageContext.request.contextPath}/admin/quiz">
-                            <input type="hidden" name="action" value="search">
-                            <div class="search-controls">
-                                <div class="form-group">
-                                    <label for="searchName">Quiz Name:</label>
-                                    <input type="text" class="form-control" id="searchName" name="searchName" 
-                                           value="${searchName}" placeholder="Enter quiz name">
-                                </div>
-                                <div class="form-group">
-                                    <label for="subjectId">Subject:</label>
-                                    <select class="form-select" id="subjectId" name="subjectId">
-                                        <option value="0">All Subjects</option>
-                                        <c:forEach var="subject" items="${subjects}">
-                                            <option value="${subject.subjectId}" 
-                                                    ${selectedSubjectId eq subject.subjectId ? 'selected' : ''}>
-                                                ${subject.subjectName}
-                                            </option>
-                                        </c:forEach>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="quizType">Quiz Type:</label>
-                                    <select class="form-select" id="quizType" name="quizType">
-                                        <option value="ALL">All Types</option>
-                                        <option value="PRACTICE" ${selectedQuizType eq 'PRACTICE' ? 'selected' : ''}>Practice</option>
-                                        <option value="MOCK_TEST" ${selectedQuizType eq 'MOCK_TEST' ? 'selected' : ''}>Mock Test</option>
-                                        <option value="ASSIGNMENT" ${selectedQuizType eq 'ASSIGNMENT' ? 'selected' : ''}>Assignment</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="pageSize">Page Size:</label>
-                                    <select class="form-select" id="pageSize" name="pageSize">
-                                        <option value="5" ${pageSize eq 5 ? 'selected' : ''}>5</option>
-                                        <option value="10" ${pageSize eq 10 ? 'selected' : ''}>10</option>
-                                        <option value="25" ${pageSize eq 25 ? 'selected' : ''}>25</option>
-                                        <option value="50" ${pageSize eq 50 ? 'selected' : ''}>50</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-search"></i> Search
-                                    </button>
-                                    <a href="${pageContext.request.contextPath}/admin/quiz" class="btn btn-secondary">
-                                        <i class="fas fa-undo"></i> Reset
-                                    </a>
+                    <!-- Statistics -->
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="card stats-card text-center">
+                                <div class="card-body">
+                                    <h3>${totalQuizzes}</h3>
+                                    <p class="mb-0">Total Quizzes</p>
                                 </div>
                             </div>
-                        </form>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h3 class="text-success">
+                                        <c:set var="activeCount" value="0"/>
+                                        <c:forEach var="quiz" items="${quizzes}">
+                                            <c:if test="${quiz.active}">
+                                                <c:set var="activeCount" value="${activeCount + 1}"/>
+                                            </c:if>
+                                        </c:forEach>
+                                        ${activeCount}
+                                    </h3>
+                                    <p class="text-muted mb-0">Active Quizzes</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h3 class="text-warning">${totalQuizzes - activeCount}</h3>
+                                    <p class="text-muted mb-0">Inactive Quizzes</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h3 class="text-info">${totalPages}</h3>
+                                    <p class="text-muted mb-0">Total Pages</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
+                    <!-- Search and Filter -->
+                    <div class="card search-card mb-4">
+                        <div class="card-body">
+                            <form method="post" action="${pageContext.request.contextPath}/admin/quiz">
+                                <input type="hidden" name="action" value="search">
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <label class="form-label">Search Quiz Name</label>
+                                        <input type="text" class="form-control" name="search" 
+                                               value="${searchKeyword}" placeholder="Enter quiz name...">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Subject</label>
+                                        <select class="form-select" name="subjectFilter">
+                                            <option value="all">All Subjects</option>
+                                            <c:forEach var="subject" items="${subjects}">
+                                                <option value="${subject.subjectId}" 
+                                                    ${subjectFilter eq subject.subjectId ? 'selected' : ''}>
+                                                    ${subject.subjectName}
+                                                </option>
+                                            </c:forEach>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Quiz Type</label>
+                                        <select class="form-select" name="typeFilter">
+                                            <option value="all">All Types</option>
+                                            <option value="PRACTICE" ${typeFilter eq 'PRACTICE' ? 'selected' : ''}>Practice</option>
+                                            <option value="MOCK_TEST" ${typeFilter eq 'MOCK_TEST' ? 'selected' : ''}>Exam</option>
+                                            <option value="ASSIGNMENT" ${typeFilter eq 'ASSIGNMENT' ? 'selected' : ''}>Assignment</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2 d-flex align-items-end">
+                                        <div class="d-flex gap-2">
+                                            <button type="submit" class="btn btn-light flex-fill">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                            <a href="${pageContext.request.contextPath}/admin/quiz" class="btn btn-outline-light">
+                                                <i class="fas fa-times"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    
                     <!-- Quiz Table -->
                     <div class="card">
-                        <div class="card-body p-0">
+                        <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-hover mb-0">
+                                <table class="table table-hover">
                                     <thead>
                                         <tr>
-                                            <th width="5%">ID</th>
-                                            <th width="20%">Quiz Name</th>
-                                            <th width="15%">Subject</th>
-                                            <th width="8%">Level</th>
-                                            <th width="8%">Questions</th>
-                                            <th width="8%">Duration</th>
-                                            <th width="8%">Pass Rate</th>
-                                            <th width="10%">Type</th>
-                                            <th width="8%">Status</th>
-                                            <th width="10%">Actions</th>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Subject</th>
+                                            <th>Level</th>
+                                            <th>Questions</th>
+                                            <th>Duration</th>
+                                            <th>Pass Rate</th>
+                                            <th>Type</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <c:choose>
-                                            <c:when test="${empty quizzes}">
-                                                <tr>
-                                                    <td colspan="10" class="text-center py-4">
-                                                        <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
-                                                        <h5 class="text-muted">No quizzes found</h5>
-                                                        <p class="text-muted">Try adjusting your search criteria or create a new quiz.</p>
-                                                    </td>
-                                                </tr>
-                                            </c:when>
-                                            <c:otherwise>
+                                            <c:when test="${not empty quizzes}">
                                                 <c:forEach var="quiz" items="${quizzes}">
                                                     <tr>
                                                         <td><strong>#${quiz.quizId}</strong></td>
                                                         <td class="text-start">
-                                                            <div>
-                                                                <strong>${quiz.quizName}</strong>
-                                                                <c:if test="${not empty quiz.description}">
-                                                                    <small class="d-block text-muted">${quiz.description.length() > 50 ? quiz.description.substring(0, 50).concat('...') : quiz.description}</small>
-                                                                </c:if>
-                                                            </div>
+                                                            <div class="fw-bold">${quiz.quizName}</div>
+                                                            <c:if test="${not empty quiz.description}">
+                                                                <small class="text-muted">${quiz.shortDescription}</small>
+                                                            </c:if>
                                                         </td>
                                                         <td>
-                                                            <span class="badge badge-primary">${quiz.subjectName}</span>
+                                                            <span class="badge bg-info">${quiz.subjectName}</span>
                                                         </td>
                                                         <td>
-                                                            <span class="badge level-${quiz.level.toLowerCase()}">${quiz.levelDisplay}</span>
+                                                            <span class="badge level-badge 
+                                                                ${quiz.level eq 'Basic' ? 'bg-success' : 
+                                                                  quiz.level eq 'Intermediate' ? 'bg-warning' : 'bg-danger'}">
+                                                                ${quiz.level}
+                                                            </span>
+                                                        </td>
+                                                        <td><strong>${quiz.numberOfQuestions}</strong></td>
+                                                        <td>
+                                                            <span class="badge bg-secondary">${quiz.duration} mins</span>
                                                         </td>
                                                         <td>
-                                                            <span class="badge badge-info">${quiz.numberOfQuestions}</span>
-                                                        </td>
-                                                        <td>
-                                                            <span class="badge badge-warning">${quiz.durationDisplay}</span>
-                                                        </td>
-                                                        <td>
-                                                            <span class="badge badge-success">${quiz.passRate}%</span>
-                                                        </td>
-                                                        <td>
-                                                            <span class="badge type-${quiz.quizType.toLowerCase().replace('_', '-')}">${quiz.quizTypeDisplay}</span>
-                                                        </td>
-                                                        <td>
-                                                            <span class="badge ${quiz.active ? 'badge-success' : 'badge-danger'}">
-                                                                ${quiz.statusDisplay}
+                                                            <span class="badge bg-primary">
+                                                                <fmt:formatNumber value="${quiz.passRate}" maxFractionDigits="0"/>%
                                                             </span>
                                                         </td>
                                                         <td>
-                                                            <div class="action-buttons">
-                                                                <button type="button" class="btn btn-warning btn-sm" 
-                                                                        onclick="editQuiz(${quiz.quizId})"
-                                                                        title="Edit Quiz">
+                                                            <span class="badge 
+                                                                ${quiz.type eq 'Practice' ? 'bg-success' : 
+                                                                  quiz.type eq 'Exam' ? 'bg-danger' : 'bg-warning'}">
+                                                                ${quiz.type}
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <span class="badge ${quiz.active ? 'bg-success' : 'bg-secondary'}">
+                                                                ${quiz.active ? 'Active' : 'Inactive'}
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <div class="quiz-actions">
+                                                                <a href="${pageContext.request.contextPath}/admin/quiz?action=edit&id=${quiz.quizId}" 
+                                                                   class="btn btn-sm btn-info" title="Edit Quiz">
                                                                     <i class="fas fa-edit"></i>
-                                                                </button>
-                                                                <button type="button" class="btn btn-danger btn-sm" 
-                                                                        onclick="deleteQuiz(${quiz.quizId}, '${quiz.quizName}')"
-                                                                        title="Delete Quiz">
+                                                                </a>
+                                                                <a href="${pageContext.request.contextPath}/admin/questions?quizId=${quiz.quizId}" 
+                                                                   class="btn btn-sm btn-success" title="Manage Questions">
+                                                                    <i class="fas fa-list-ul"></i>
+                                                                </a>
+                                                                <button type="button" class="btn btn-sm btn-danger" title="Delete Quiz"
+                                                                        onclick="confirmDelete(${quiz.quizId})">
                                                                     <i class="fas fa-trash"></i>
                                                                 </button>
                                                             </div>
                                                         </td>
                                                     </tr>
                                                 </c:forEach>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <tr>
+                                                    <td colspan="10" class="text-center py-4">
+                                                        <div class="text-muted">
+                                                            <i class="fas fa-question-circle fa-3x mb-3"></i>
+                                                            <h4>No quizzes found</h4>
+                                                            <p>There are no quizzes available. Create your first quiz!</p>
+                                                        </div>
+                                                    </td>
+                                                </tr>
                                             </c:otherwise>
                                         </c:choose>
                                     </tbody>
                                 </table>
                             </div>
+
+                            <!-- Pagination -->
+                            <c:if test="${totalPages > 1}">
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination justify-content-center">
+                                        <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                                            <a class="page-link" href="${pageContext.request.contextPath}/admin/quiz?page=${currentPage - 1}&search=${searchKeyword}&subjectFilter=${subjectFilter}&typeFilter=${typeFilter}">Previous</a>
+                                        </li>
+                                        <c:forEach begin="1" end="${totalPages}" var="i">
+                                            <li class="page-item ${currentPage == i ? 'active' : ''}">
+                                                <a class="page-link" href="${pageContext.request.contextPath}/admin/quiz?page=${i}&search=${searchKeyword}&subjectFilter=${subjectFilter}&typeFilter=${typeFilter}">${i}</a>
+                                            </li>
+                                        </c:forEach>
+                                        <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                                            <a class="page-link" href="${pageContext.request.contextPath}/admin/quiz?page=${currentPage + 1}&search=${searchKeyword}&subjectFilter=${subjectFilter}&typeFilter=${typeFilter}">Next</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </c:if>
                         </div>
                     </div>
-
-                    <!-- Pagination -->
-                    <c:if test="${totalPages > 1}">
-                        <nav aria-label="Quiz pagination" class="mt-4">
-                            <ul class="pagination justify-content-center">
-                                <c:if test="${currentPage > 1}">
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page=1&pageSize=${pageSize}&searchName=${searchName}&subjectId=${selectedSubjectId}&quizType=${selectedQuizType}&action=search">
-                                            <i class="fas fa-angle-double-left"></i>
-                                        </a>
-                                    </li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page=${currentPage-1}&pageSize=${pageSize}&searchName=${searchName}&subjectId=${selectedSubjectId}&quizType=${selectedQuizType}&action=search">
-                                            <i class="fas fa-angle-left"></i>
-                                        </a>
-                                    </li>
-                                </c:if>
-                                
-                                <c:forEach var="i" begin="${currentPage > 3 ? currentPage - 2 : 1}" 
-                                           end="${currentPage + 2 < totalPages ? currentPage + 2 : totalPages}">
-                                    <li class="page-item ${i eq currentPage ? 'active' : ''}">
-                                        <a class="page-link" href="?page=${i}&pageSize=${pageSize}&searchName=${searchName}&subjectId=${selectedSubjectId}&quizType=${selectedQuizType}&action=search">${i}</a>
-                                    </li>
-                                </c:forEach>
-                                
-                                <c:if test="${currentPage < totalPages}">
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page=${currentPage+1}&pageSize=${pageSize}&searchName=${searchName}&subjectId=${selectedSubjectId}&quizType=${selectedQuizType}&action=search">
-                                            <i class="fas fa-angle-right"></i>
-                                        </a>
-                                    </li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page=${totalPages}&pageSize=${pageSize}&searchName=${searchName}&subjectId=${selectedSubjectId}&quizType=${selectedQuizType}&action=search">
-                                            <i class="fas fa-angle-double-right"></i>
-                                        </a>
-                                    </li>
-                                </c:if>
-                            </ul>
-                        </nav>
-                    </c:if>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Quiz Modal -->
-    <div class="modal fade" id="quizModal" tabindex="-1" aria-labelledby="quizModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="quizModalLabel">
-                        <i class="fas fa-question-circle"></i> Create New Quiz
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form id="quizForm" method="post" action="${pageContext.request.contextPath}/admin/quiz">
-                    <div class="modal-body">
-                        <input type="hidden" name="action" id="formAction" value="save">
-                        <input type="hidden" name="quizId" id="quizId">
-                        
-                        <div class="row">
-                            <div class="col-md-12 mb-3">
-                                <label for="quizName" class="form-label">Quiz Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="quizName" name="quizName" required>
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-12 mb-3">
-                                <label for="description" class="form-label">Description</label>
-                                <textarea class="form-control" id="description" name="description" rows="3" placeholder="Optional description for the quiz"></textarea>
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="modalSubjectId" class="form-label">Subject <span class="text-danger">*</span></label>
-                                <select class="form-select" id="modalSubjectId" name="subjectId" required>
-                                    <option value="">Select Subject</option>
-                                    <c:forEach var="subject" items="${subjects}">
-                                        <option value="${subject.subjectId}">${subject.subjectName}</option>
-                                    </c:forEach>
-                                </select>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="level" class="form-label">Level <span class="text-danger">*</span></label>
-                                <select class="form-select" id="level" name="level" required>
-                                    <option value="">Select Level</option>
-                                    <option value="EASY">Easy</option>
-                                    <option value="MEDIUM">Medium</option>
-                                    <option value="HARD">Hard</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="duration" class="form-label">Duration (minutes) <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" id="duration" name="duration" min="1" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="passRate" class="form-label">Pass Rate (%) <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" id="passRate" name="passRate" min="0" max="100" step="0.1" required>
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="modalQuizType" class="form-label">Quiz Type <span class="text-danger">*</span></label>
-                                <select class="form-select" id="modalQuizType" name="quizType" required>
-                                    <option value="">Select Type</option>
-                                    <option value="PRACTICE">Practice</option>
-                                    <option value="MOCK_TEST">Mock Test</option>
-                                    <option value="ASSIGNMENT">Assignment</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="numberOfQuestions" class="form-label">Number of Questions <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" id="numberOfQuestions" name="numberOfQuestions" min="1" required>
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-12 mb-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="isActive" name="isActive" value="true" checked>
-                                    <label class="form-check-label" for="isActive">
-                                        Active Status
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            <i class="fas fa-times"></i> Cancel
-                        </button>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i> Save Quiz
-                        </button>
-                    </div>
-                </form>
-            </div>
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            Are you sure you want to delete this quiz? This action cannot be undone.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <a id="deleteConfirmBtn" href="#" class="btn btn-danger">Delete</a>
+          </div>
         </div>
+      </div>
     </div>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- SweetAlert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.19/dist/sweetalert2.min.js"></script>
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-        function openCreateModal() {
-            document.getElementById('quizModalLabel').innerHTML = '<i class="fas fa-plus"></i> Create New Quiz';
-            document.getElementById('formAction').value = 'save';
-            document.getElementById('quizForm').reset();
-            document.getElementById('quizId').value = '';
-            document.getElementById('isActive').checked = true;
+        function confirmDelete(quizId) {
+            var deleteUrl = '${pageContext.request.contextPath}/admin/quiz?action=delete&id=' + quizId;
+            document.getElementById('deleteConfirmBtn').setAttribute('href', deleteUrl);
+            var deleteModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+            deleteModal.show();
         }
-
-        function editQuiz(quizId) {
-            fetch('${pageContext.request.contextPath}/admin/quiz?action=edit&id=' + quizId)
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('quizModalLabel').innerHTML = '<i class="fas fa-edit"></i> Edit Quiz';
-                    document.getElementById('formAction').value = 'update';
-                    document.getElementById('quizId').value = data.quizId;
-                    document.getElementById('quizName').value = data.quizName;
-                    document.getElementById('description').value = data.description;
-                    document.getElementById('modalSubjectId').value = data.subjectId;
-                    document.getElementById('level').value = data.level;
-                    document.getElementById('duration').value = data.duration;
-                    document.getElementById('passRate').value = data.passRate;
-                    document.getElementById('modalQuizType').value = data.quizType;
-                    document.getElementById('numberOfQuestions').value = data.numberOfQuestions;
-                    document.getElementById('isActive').checked = data.isActive;
-                    
-                    new bootstrap.Modal(document.getElementById('quizModal')).show();
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Failed to load quiz data.',
-                        icon: 'error',
-                        confirmButtonColor: '#667eea'
-                    });
-                });
-        }
-
-        function deleteQuiz(quizId, quizName) {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: `You want to delete the quiz "${quizName}"? This action cannot be undone.`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#ee5a52',
-                cancelButtonColor: '#6c757d',
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'Cancel'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = '${pageContext.request.contextPath}/admin/quiz?action=delete&id=' + quizId;
-                }
-            });
-        }
-
-        // Form validation
-        document.getElementById('quizForm').addEventListener('submit', function(e) {
-            const duration = parseInt(document.getElementById('duration').value);
-            const passRate = parseFloat(document.getElementById('passRate').value);
-            const numberOfQuestions = parseInt(document.getElementById('numberOfQuestions').value);
-
-            if (duration < 1) {
-                e.preventDefault();
-                Swal.fire({
-                    title: 'Invalid Duration!',
-                    text: 'Duration must be at least 1 minute.',
-                    icon: 'error',
-                    confirmButtonColor: '#667eea'
-                });
-                return;
-            }
-
-            if (passRate < 0 || passRate > 100) {
-                e.preventDefault();
-                Swal.fire({
-                    title: 'Invalid Pass Rate!',
-                    text: 'Pass rate must be between 0 and 100.',
-                    icon: 'error',
-                    confirmButtonColor: '#667eea'
-                });
-                return;
-            }
-
-            if (numberOfQuestions < 1) {
-                e.preventDefault();
-                Swal.fire({
-                    title: 'Invalid Number of Questions!',
-                    text: 'Number of questions must be at least 1.',
-                    icon: 'error',
-                    confirmButtonColor: '#667eea'
-                });
-                return;
-            }
-        });
-
-        // Auto-submit form when page size changes
-        document.getElementById('pageSize').addEventListener('change', function() {
-            this.form.submit();
-        });
     </script>
 </body>
 </html> 

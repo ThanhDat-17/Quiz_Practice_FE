@@ -62,7 +62,7 @@ CREATE TABLE dbo.quizzes
     duration           INT                        NOT NULL,       -- minutes
     pass_rate          DECIMAL(5,2)               NOT NULL,       -- 0–100
     quiz_type          NVARCHAR(20)               NOT NULL,
-    number_of_questions INT                       NOT NULL,
+    number_of_questions INT                       NOT NULL DEFAULT(0),
     is_active          BIT                        NOT NULL DEFAULT (1),
     created_date       DATETIME                   NOT NULL DEFAULT (GETDATE()),
     updated_date       DATETIME                   NOT NULL DEFAULT (GETDATE()),
@@ -70,8 +70,7 @@ CREATE TABLE dbo.quizzes
 
     CONSTRAINT CHK_quizzes_level        CHECK (level       IN ('EASY','MEDIUM','HARD')),
     CONSTRAINT CHK_quizzes_quiz_type    CHECK (quiz_type   IN ('PRACTICE','MOCK_TEST','ASSIGNMENT')),
-    CONSTRAINT CHK_quizzes_pass_rate    CHECK (pass_rate BETWEEN 0 AND 100),
-    CONSTRAINT CHK_quizzes_num_quest    CHECK (number_of_questions > 0)
+    CONSTRAINT CHK_quizzes_pass_rate    CHECK (pass_rate BETWEEN 0 AND 100)
 );
 GO
 
