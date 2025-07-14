@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="QuizPracticePU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>entity.QuestionBank</class>
+    <class>entity.AnswerOption</class>
+    <class>entity.Roles</class>
+    <class>entity.Users</class>
+    <class>entity.Payment</class>
+    <class>entity.UserAnswers</class>
+    <class>entity.Lessons</class>
+    <class>entity.QuizResults</class>
+    <class>entity.ResetToken</class>
+    <class>entity.Subjects</class>
+    <class>entity.Categories</class>
+    <class>entity.Quizzes</class>
+    <class>entity.Blogs</class>
+    <class>entity.Contacts</class>
+    <class>entity.Feedback</class>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:sqlserver://localhost:1433;databaseName=QuizPractice;encrypt=true;trustServerCertificate=true;"/>
+      <property name="javax.persistence.jdbc.user" value="sa"/>
+      <property name="javax.persistence.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
+      <property name="javax.persistence.jdbc.password" value="123"/>
+    </properties>
+  </persistence-unit>
+</persistence>
