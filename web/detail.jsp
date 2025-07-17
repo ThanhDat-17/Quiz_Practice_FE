@@ -54,6 +54,122 @@
         <!-- STYLESHEETS ============================================= -->
         <link rel="stylesheet" type="text/css" href="assets/css/style.css">
         <link class="skin" rel="stylesheet" type="text/css" href="assets/css/color/color-1.css">
+        <style>
+            #chatbox {
+                position: fixed;
+                bottom: 10px;
+                right: 10px;
+                width: 350px;
+                height: 500px;
+                background: #fff;
+                border-radius: 15px;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+                display: none;
+                flex-direction: column;
+                z-index: 9999;
+                font-family: Arial, sans-serif;
+                overflow: hidden;
+            }
+
+            #chatbox .header {
+                background-color: #0084ff;
+                color: #fff;
+                padding: 15px;
+                border-radius: 15px 15px 0 0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            #chatbox .header span {
+                font-size: 18px;
+                font-weight: bold;
+            }
+
+            #chatbox .header #close-chat {
+                font-size: 20px;
+                cursor: pointer;
+                background-color: transparent;
+                border: none;
+                color: white;
+            }
+
+            #chatbox #chat-messages {
+                flex: 1;
+                padding: 10px;
+                overflow-y: auto;
+                background-color: #f2f2f2;
+                border-bottom: 1px solid #ddd;
+                max-height: calc(100% - 120px); /* Adjust for input and header */
+            }
+
+            #chatbox #chat-messages p {
+                padding: 8px 12px;
+                background-color: #e4e6eb;
+                margin: 5px 0;
+                border-radius: 10px;
+                max-width: 80%;
+                word-wrap: break-word;
+            }
+
+            #chatbox #chat-messages .user-msg {
+                background-color: #4f84ff;
+                color: white;
+                margin-left: auto;
+                border-radius: 10px;
+                align-self: flex-end;
+            }
+
+            #chatbox #chat-messages .bot-msg {
+                background-color: #f1f0f0;
+                color: #333;
+                margin-right: auto;
+                border-radius: 10px;
+                align-self: flex-start;
+            }
+
+            #chatbox #chat-input {
+                border: none;
+                padding: 12px 15px;
+                font-size: 16px;
+                outline: none;
+                border-top: 1px solid #ddd;
+                width: calc(100% - 60px); /* Adjust for send button */
+                box-sizing: border-box;
+            }
+
+            #chatbox #chat-input::placeholder {
+                color: #aaa;
+            }
+
+            #chatbox #send-btn {
+                background-color: #0084ff;
+                color: white;
+                border: none;
+                padding: 12px 15px;
+                cursor: pointer;
+                border-radius: 10px;
+                margin-left: 10px;
+            }
+
+            #chat-toggle {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background-color: #0084ff;
+                color: white;
+                padding: 15px;
+                border-radius: 50%;
+                cursor: pointer;
+                z-index: 10000;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            }
+
+            #chat-toggle:hover {
+                background-color: #0073e6;
+            }
+
+        </style>
     </head>
     <body id="bg">
         <div class="page-wraper">
@@ -579,72 +695,7 @@
         <script src="assets/js/contact.js"></script>
         <script src="assets/vendors/switcher/switcher.js"></script>
         <script>
-                                                const OPENAI_API_KEY = "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"; // 🔁 THAY bằng API key của bạn
-
-                                                $(document).ready(function () {
-                                                    // 1. Hiển thị & Ẩn Chat
-                                                    $("#chat-toggle").click(() => $("#chatbox").toggle());
-                                                    $("#close-chat").click(() => $("#chatbox").hide());
-
-                                                    // 2. Gợi ý câu hỏi
-                                                    $(".sample-btn").click(function () {
-                                                        const text = $(this).text();
-                                                        $("#chat-input").val(text);
-                                                        $("#send-btn").click();
-                                                    });
-
-                                                    // 3. Gửi câu hỏi
-                                                    $("#send-btn").click(async function () {
-                                                        const input = $("#chat-input").val().trim();
-                                                        if (!input)
-                                                            return;
-
-                                                        appendMessage("Bạn", input);
-                                                        $("#chat-input").val("");
-
-                                                        try {
-                                                            const response = await fetch("https://api.openai.com/v1/chat/completions", {
-                                                                method: "POST",
-                                                                headers: {
-                                                                    "Content-Type": "application/json",
-                                                                    "Authorization": "Bearer " + OPENAI_API_KEY
-                                                                },
-                                                                body: JSON.stringify({
-                                                                    model: "gpt-4.0",
-                                                                    messages: [
-                                                                        {role: "system", content: "Bạn là một trợ lý học tập thân thiện."},
-                                                                        {role: "user", content: input}
-                                                                    ]
-                                                                })
-                                                            });
-
-                                                            const data = await response.json();
-                                                            const reply = data.choices[0].message.content.trim();
-                                                            appendMessage("ChatGPT", reply);
-                                                        } catch (e) {
-                                                            appendMessage("Lỗi", "Không thể kết nối đến máy chủ.");
-                                                        }
-                                                    });
-
-                                                    // 4. Hàm hiển thị & lưu vào sessionStorage
-                                                    function appendMessage(sender, text) {
-                                                        const html = '<div>' + text + '</div>';
-                                                        $("#chat-messages").append(html);
-                                                        $("#chat-messages").scrollTop($("#chat-messages")[0].scrollHeight);
-                                                        let history = sessionStorage.getItem("chatHistory") || "";
-                                                        history += html;
-                                                        sessionStorage.setItem("chatHistory", history);
-                                                    }
-
-                                                    // 5. Hiển thị lại lịch sử nếu có
-                                                    const history = sessionStorage.getItem("chatHistory");
-                                                    if (history && history.trim().length > 0) {
-                                                        $("#chat-messages").html(history);
-                                                        $("#sample-questions").hide(); // Ẩn gợi ý nếu đã có lịch sử
-                                                    } else {
-                                                        $("#sample-questions").show(); // Hiện gợi ý nếu chưa có
-                                                    }
-                                                });
+                                               
         </script>
 
     </body>
