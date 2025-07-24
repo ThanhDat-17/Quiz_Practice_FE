@@ -125,7 +125,15 @@ public class BlogController extends HttpServlet {
         // Handle file upload if present
         Part filePart = request.getPart("imageFile");
         if (filePart != null && filePart.getSize() > 0) {
-            imageUrl = FileUploadUtil.uploadBlogImage(filePart, getServletContext());
+            String uploadedFileName = FileUploadUtil.uploadBlogImage(filePart, request.getServletContext());
+            if (uploadedFileName != null && !uploadedFileName.isEmpty()) {
+                imageUrl = "assets/images/blog/uploaded/" + uploadedFileName;
+            }
+        } else if (imageUrl != null && !imageUrl.isEmpty()) {
+            // If user entered a manual URL, use as is if it's absolute, otherwise treat as relative to assets/images/blog/uploaded
+            if (!imageUrl.startsWith("http") && !imageUrl.startsWith("/")) {
+                imageUrl = "assets/images/blog/uploaded/" + imageUrl;
+            }
         }
         
         Blog blog = new Blog();
@@ -159,7 +167,15 @@ public class BlogController extends HttpServlet {
         // Handle file upload if present
         Part filePart = request.getPart("imageFile");
         if (filePart != null && filePart.getSize() > 0) {
-            imageUrl = FileUploadUtil.uploadBlogImage(filePart, getServletContext());
+            String uploadedFileName = FileUploadUtil.uploadBlogImage(filePart, request.getServletContext());
+            if (uploadedFileName != null && !uploadedFileName.isEmpty()) {
+                imageUrl = "assets/images/blog/uploaded/" + uploadedFileName;
+            }
+        } else if (imageUrl != null && !imageUrl.isEmpty()) {
+            // If user entered a manual URL, use as is if it's absolute, otherwise treat as relative to assets/images/blog/uploaded
+            if (!imageUrl.startsWith("http") && !imageUrl.startsWith("/")) {
+                imageUrl = "assets/images/blog/uploaded/" + imageUrl;
+            }
         }
         
         Blog blog = new Blog();
