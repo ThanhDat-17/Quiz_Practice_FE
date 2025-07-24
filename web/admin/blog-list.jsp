@@ -106,7 +106,7 @@
                         <a class="nav-link" href="#">
                             <i class="fas fa-users"></i> User Management
                         </a>
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="${pageContext.request.contextPath}/admin/quiz">
                             <i class="fas fa-question-circle"></i> Quiz Management
                         </a>
                         <a class="nav-link" href="#">
