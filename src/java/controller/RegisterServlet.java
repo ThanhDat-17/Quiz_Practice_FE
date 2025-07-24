@@ -5,12 +5,14 @@
 
 package controller;
 
+import entity.Users;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import service.UserDAO;
 
 /**
  *
@@ -53,7 +55,7 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        request.getRequestDispatcher("register.jsp").forward(request, response);
     } 
 
     /** 
@@ -66,7 +68,19 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        String name = request.getParameter("name");
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        UserDAO userDAO = new UserDAO();
+        Users user = userDAO.getUserByUserAndPass(email);
+        if(user != null){
+            request.setAttribute("error", "Email đã được đăng kí");
+            doGet(request, response);
+        }
+        else {
+            userDAO.insert(name,email,password);
+            response.sendRedirect("loginAccount");
+        }
     }
 
     /** 

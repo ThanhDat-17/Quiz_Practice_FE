@@ -1,6 +1,5 @@
 package Controller;
 
-import Dal.UserDAO;
 import entity.Users;
 
 import jakarta.servlet.ServletException;
@@ -12,6 +11,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import service.UserDAO;
 import utils.EmailUtil;
 
 @WebServlet("/forgot-password")

@@ -1,6 +1,5 @@
 package Controller;
 
-import Dal.UserDAO;
 import entity.ResetToken;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -9,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
+import service.UserDAO;
 
 @WebServlet("/reset-password")
 public class ResetPasswordServlet extends HttpServlet {

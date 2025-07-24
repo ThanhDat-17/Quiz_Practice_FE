@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.util.List;
 
 
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -74,7 +73,6 @@ public class AnswerOption implements Serializable {
         this.questionId = questionId;
     }
 
-    @XmlTransient
     public List<UserAnswers> getUserAnswersList() {
         return userAnswersList;
     }

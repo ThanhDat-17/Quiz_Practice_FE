@@ -8,8 +8,6 @@ import java.io.Serializable;
 import java.util.List;
 
 
-import javax.xml.bind.annotation.XmlTransient;
-
 /**
  *
  * @author The Shuyy
@@ -72,7 +70,6 @@ public class QuestionBank implements Serializable {
         this.questionType = questionType;
     }
 
-    @XmlTransient
     public List<Quizzes> getQuizzesList() {
         return quizzesList;
     }
@@ -81,7 +78,6 @@ public class QuestionBank implements Serializable {
         this.quizzesList = quizzesList;
     }
 
-    @XmlTransient
     public List<AnswerOption> getAnswerOptionList() {
         return answerOptionList;
     }
@@ -90,7 +86,6 @@ public class QuestionBank implements Serializable {
         this.answerOptionList = answerOptionList;
     }
 
-    @XmlTransient
     public List<UserAnswers> getUserAnswersList() {
         return userAnswersList;
     }

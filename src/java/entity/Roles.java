@@ -6,7 +6,6 @@ package entity;
 
 import java.io.Serializable;
 import java.util.List;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -47,7 +46,6 @@ public class Roles implements Serializable {
         this.roleName = roleName;
     }
 
-    @XmlTransient
     public List<Users> getUsersList() {
         return usersList;
     }

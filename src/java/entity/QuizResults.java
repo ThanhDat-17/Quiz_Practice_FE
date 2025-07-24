@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Date;
 
 
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -85,7 +84,6 @@ public class QuizResults implements Serializable {
         this.userId = userId;
     }
 
-    @XmlTransient
     public List<UserAnswers> getUserAnswersList() {
         return userAnswersList;
     }

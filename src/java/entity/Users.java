@@ -7,7 +7,6 @@ package entity;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Date;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -161,7 +160,6 @@ public class Users implements Serializable {
         this.phone = phone;
     }
 
-    @XmlTransient
     public List<ResetToken> getResetTokenList() {
         return resetTokenList;
     }
@@ -170,7 +168,6 @@ public class Users implements Serializable {
         this.resetTokenList = resetTokenList;
     }
 
-    @XmlTransient
     public List<Blogs> getBlogsList() {
         return blogsList;
     }
@@ -179,7 +176,6 @@ public class Users implements Serializable {
         this.blogsList = blogsList;
     }
 
-    @XmlTransient
     public List<QuizResults> getQuizResultsList() {
         return quizResultsList;
     }
@@ -196,7 +192,6 @@ public class Users implements Serializable {
         this.roleId = roleId;
     }
 
-    @XmlTransient
     public List<Feedback> getFeedbackList() {
         return feedbackList;
     }
@@ -205,7 +200,6 @@ public class Users implements Serializable {
         this.feedbackList = feedbackList;
     }
 
-    @XmlTransient
     public List<Payment> getPaymentList() {
         return paymentList;
     }
@@ -214,7 +208,6 @@ public class Users implements Serializable {
         this.paymentList = paymentList;
     }
 
-    @XmlTransient
     public List<Quizzes> getQuizzesList() {
         return quizzesList;
     }

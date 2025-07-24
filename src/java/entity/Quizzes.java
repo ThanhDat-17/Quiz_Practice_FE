@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Date;
 
 
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -105,7 +104,6 @@ public class Quizzes implements Serializable {
         this.updatedDate = updatedDate;
     }
 
-    @XmlTransient
     public List<QuestionBank> getQuestionBankList() {
         return questionBankList;
     }
@@ -114,7 +112,6 @@ public class Quizzes implements Serializable {
         this.questionBankList = questionBankList;
     }
 
-    @XmlTransient
     public List<QuizResults> getQuizResultsList() {
         return quizResultsList;
     }

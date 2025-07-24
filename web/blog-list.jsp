@@ -1,11 +1,12 @@
 <%-- 
-    Document   : detail
-    Created on : Jun 30, 2025, 11:33:03 PM
-    Author     : The Shuyy
+    Document   : blog-list
+    Created on : May 26, 2025, 11:54:28 PM
+    Author     : Lom
 --%>
 
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -54,122 +55,7 @@
         <!-- STYLESHEETS ============================================= -->
         <link rel="stylesheet" type="text/css" href="assets/css/style.css">
         <link class="skin" rel="stylesheet" type="text/css" href="assets/css/color/color-1.css">
-        <style>
-            #chatbox {
-                position: fixed;
-                bottom: 10px;
-                right: 10px;
-                width: 350px;
-                height: 500px;
-                background: #fff;
-                border-radius: 15px;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-                display: none;
-                flex-direction: column;
-                z-index: 9999;
-                font-family: Arial, sans-serif;
-                overflow: hidden;
-            }
 
-            #chatbox .header {
-                background-color: #0084ff;
-                color: #fff;
-                padding: 15px;
-                border-radius: 15px 15px 0 0;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }
-
-            #chatbox .header span {
-                font-size: 18px;
-                font-weight: bold;
-            }
-
-            #chatbox .header #close-chat {
-                font-size: 20px;
-                cursor: pointer;
-                background-color: transparent;
-                border: none;
-                color: white;
-            }
-
-            #chatbox #chat-messages {
-                flex: 1;
-                padding: 10px;
-                overflow-y: auto;
-                background-color: #f2f2f2;
-                border-bottom: 1px solid #ddd;
-                max-height: calc(100% - 120px); /* Adjust for input and header */
-            }
-
-            #chatbox #chat-messages p {
-                padding: 8px 12px;
-                background-color: #e4e6eb;
-                margin: 5px 0;
-                border-radius: 10px;
-                max-width: 80%;
-                word-wrap: break-word;
-            }
-
-            #chatbox #chat-messages .user-msg {
-                background-color: #4f84ff;
-                color: white;
-                margin-left: auto;
-                border-radius: 10px;
-                align-self: flex-end;
-            }
-
-            #chatbox #chat-messages .bot-msg {
-                background-color: #f1f0f0;
-                color: #333;
-                margin-right: auto;
-                border-radius: 10px;
-                align-self: flex-start;
-            }
-
-            #chatbox #chat-input {
-                border: none;
-                padding: 12px 15px;
-                font-size: 16px;
-                outline: none;
-                border-top: 1px solid #ddd;
-                width: calc(100% - 60px); /* Adjust for send button */
-                box-sizing: border-box;
-            }
-
-            #chatbox #chat-input::placeholder {
-                color: #aaa;
-            }
-
-            #chatbox #send-btn {
-                background-color: #0084ff;
-                color: white;
-                border: none;
-                padding: 12px 15px;
-                cursor: pointer;
-                border-radius: 10px;
-                margin-left: 10px;
-            }
-
-            #chat-toggle {
-                position: fixed;
-                bottom: 20px;
-                right: 20px;
-                background-color: #0084ff;
-                color: white;
-                padding: 15px;
-                border-radius: 50%;
-                cursor: pointer;
-                z-index: 10000;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            }
-
-            #chat-toggle:hover {
-                background-color: #0073e6;
-            }
-
-        </style>
     </head>
     <body id="bg">
         <div class="page-wraper">
@@ -194,7 +80,7 @@
                                         </select>
                                     </li>
                                     <li><a href="login.html">Login</a></li>
-                                    <li><a href="${pageContext.request.contextPath}/register">Register</a></li>
+                                    <li><a href="register.html">Register</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -227,8 +113,8 @@
                             </div>
                             <!-- Search Box ==== -->
                             <div class="nav-search-bar">
-                                <form action="#">
-                                    <input name="search" value="" type="text" class="form-control" placeholder="Type to search">
+                                <form action="blog-list" method="post">
+                                    <input name="search" value="${searchKeyword}" type="text" class="form-control" placeholder="Type to search">
                                     <span><i class="ti-search"></i></span>
                                 </form>
                                 <span id="search-remove"><i class="ti-close"></i></span>
@@ -283,7 +169,7 @@
                                                 <h5 class="menu-adv-title">Our Courses</h5>
                                                 <ul>
                                                     <li><a href="courses.html">Courses </a></li>
-                                                    <li><a href="courses-details.html">Subject Details</a></li>
+                                                    <li><a href="courses-details.html">Courses Details</a></li>
                                                     <li><a href="profile.html">Instructor Profile</a></li>
                                                     <li><a href="event.html">Upcoming Event</a></li>
                                                     <li><a href="membership.html">Membership</a></li>
@@ -339,14 +225,14 @@
                     </div>
                 </div>
             </header>
-            <!-- header END ==== -->
+            <!-- header END -->
             <!-- Content -->
             <div class="page-content bg-white">
                 <!-- inner page banner -->
-                <div class="page-banner ovbl-dark" style="background-image:url(assets/images/banner/banner2.jpg);">
+                <div class="page-banner ovbl-dark" style="background-image:url(assets/images/banner/banner1.jpg);">
                     <div class="container">
                         <div class="page-banner-entry">
-                            <h1 class="text-white">Subject Details</h1>
+                            <h1 class="text-white">Blog Classic Sidebar</h1>
                         </div>
                     </div>
                 </div>
@@ -355,143 +241,191 @@
                     <div class="container">
                         <ul class="list-inline">
                             <li><a href="#">Home</a></li>
-                            <li>Subject Details</li>
+                            <li>Blog Classic Sidebar</li>
                         </ul>
                     </div>
                 </div>
                 <!-- Breadcrumb row END -->
-                <!-- inner page banner END -->
                 <div class="content-block">
-                    <!-- About Us -->
                     <div class="section-area section-sp1">
                         <div class="container">
-                            <div class="row d-flex">
-                                <div class="col-lg-3 col-md-4 col-sm-12 m-b30">
-
-
-                                    <div class="widget courses-search-bx placeani">
-                                        <div class="form-group">
-                                            <div class="input-group">
-
-                                                <form action="${pageContext.request.contextPath}/home" method="get">
-                                                    <input name="search" type="text" class="form-control" placeholder="Search for courses" value="${requestScope.search}">
-                                                    <button type="submit" class="btn btn-search">Search</button>
+                            <div class="row">
+                                <!-- left part start -->
+                                <div class="col-lg-8 col-xl-8 col-md-7">
+                                    <!-- blog grid -->
+                                    <div id="masonry" class="ttr-blog-grid-3 row">
+                                        <c:choose>
+                                            <c:when test="${not empty blogs}">
+                                                <c:forEach var="blog" items="${blogs}">
+                                                    <div class="post action-card col-xl-6 col-lg-6 col-md-12 col-xs-12 m-b40">
+                                                        <div class="recent-news">
+                                                            <div class="action-box">
+                                                                <img src="${pageContext.request.contextPath}/${not empty blog.image ? blog.image : 'assets/images/blog/default/thum1.jpg'}" alt="${blog.title}">
+                                                            </div>
+                                                            <div class="info-bx">
+                                                                <ul class="media-post">
+                                                                    <li><a href="#"><i class="fa fa-calendar"></i><fmt:formatDate value="${blog.createdDateAsDate}" pattern="MMM dd yyyy"/></a></li>
+                                                                    <li><a href="#"><i class="fa fa-user"></i>By ${not empty blog.authorName ? blog.authorName : 'Admin'}</a></li>
+                                                                </ul>
+                                                                <h5 class="post-title"><a href="blog-detail?id=${blog.blogId}">${blog.title}</a></h5>
+                                                                <p>${blog.shortContent}</p>
+                                                                <div class="post-extra">
+                                                                    <a href="blog-detail?id=${blog.blogId}" class="btn-link">READ MORE</a>
+                                                                    <a href="#" class="comments-bx"><i class="fa fa-comments-o"></i>0 Comment</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </c:forEach>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <div class="col-12">
+                                                    <div class="text-center">
+                                                        <h4>No blogs found</h4>
+                                                        <p>There are no blogs available at the moment.</p>
+                                                    </div>
+                                                </div>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
+                                    <!-- blog grid END -->
+                                    <!-- Pagination -->
+                                    <c:if test="${totalPages > 1}">
+                                        <div class="pagination-bx rounded-sm gray clearfix">
+                                            <ul class="pagination">
+                                                <c:if test="${currentPage > 1}">
+                                                    <li class="previous">
+                                                        <a href="blog-list?page=${currentPage - 1}${not empty searchKeyword ? '&search=' : ''}${searchKeyword}">
+                                                            <i class="ti-arrow-left"></i> Prev
+                                                        </a>
+                                                    </li>
+                                                </c:if>
+                                                
+                                                <c:forEach begin="1" end="${totalPages}" var="i">
+                                                    <c:choose>
+                                                        <c:when test="${i == currentPage}">
+                                                            <li class="active"><a href="#">${i}</a></li>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <li>
+                                                                <a href="blog-list?page=${i}${not empty searchKeyword ? '&search=' : ''}${searchKeyword}">${i}</a>
+                                                            </li>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </c:forEach>
+                                                
+                                                <c:if test="${currentPage < totalPages}">
+                                                    <li class="next">
+                                                        <a href="blog-list?page=${currentPage + 1}${not empty searchKeyword ? '&search=' : ''}${searchKeyword}">
+                                                            Next <i class="ti-arrow-right"></i>
+                                                        </a>
+                                                    </li>
+                                                </c:if>
+                                            </ul>
+                                        </div>
+                                    </c:if>
+                                    <!-- Pagination END -->
+                                </div>
+                                <!-- left part END -->
+                                <!-- Side bar start -->
+                                <div class="col-lg-4 col-xl-4 col-md-5 sticky-top">
+                                    <aside class="side-bar sticky-top">
+                                        <div class="widget">
+                                            <h6 class="widget-title">Search</h6>
+                                            <div class="search-bx style-1">
+                                                <form role="search" method="post" action="blog-list">
+                                                    <div class="input-group">
+                                                        <input name="search" value="${searchKeyword}" class="form-control" placeholder="Enter your keywords..." type="text">
+                                                        <span class="input-group-btn">
+                                                            <button type="submit" class="fa fa-search text-primary"></button>
+                                                        </span> 
+                                                    </div>
                                                 </form>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="widget widget_archive">
-                                        <h5 class="widget-title style-1">CATEGORY</h5>
-                                        <form action="${pageContext.request.contextPath}/home" method="get">
-                                            <select name="categoryID" onchange="this.form.submit()">
-                                                <option value="">All Categories</option> <!-- Option for All -->
-                                                <c:forEach items="${requestScope.categories}" var="item">
-                                                    <option value="${item.categoryId}" ${item.categoryId == requestScope.categoryID ? 'selected' : ''}>
-                                                        ${item.categoryName}
-                                                    </option>
+                                        <div class="widget recent-posts-entry">
+                                            <h6 class="widget-title">Recent Posts</h6>
+                                            <div class="widget-post-bx">
+                                                <c:forEach var="recentBlog" items="${recentBlogs}">
+                                                    <div class="widget-post clearfix">
+                                                        <div class="ttr-post-media"> 
+                                                            <img src="${pageContext.request.contextPath}/${not empty recentBlog.image ? recentBlog.image : 'assets/images/blog/default/thum1.jpg'}" width="200" height="143" alt="${recentBlog.title}"> 
+                                                        </div>
+                                                        <div class="ttr-post-info">
+                                                            <div class="ttr-post-header">
+                                                                <h6 class="post-title">
+                                                                    <a href="blog-detail?id=${recentBlog.blogId}">${recentBlog.title}</a>
+                                                                </h6>
+                                                            </div>
+                                                            <ul class="media-post">
+                                                                <li><a href="#"><i class="fa fa-calendar"></i><fmt:formatDate value="${recentBlog.createdDateAsDate}" pattern="MMM dd yyyy"/></a></li>
+                                                                <li><a href="#"><i class="fa fa-comments-o"></i>0 Comment</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
                                                 </c:forEach>
-                                            </select>
-                                        </form>
-                                    </div>
-
-
-                                    <div class="widget recent-posts-entry widget-courses">
-                                        <h5 class="widget-title style-1">Featured subjects</h5>
-                                        <div class="widget-post-bx">
-                                            <div class="widget-post clearfix">
-                                                <div class="ttr-post-media"> <img src="assets/images/blog/recent-blog/pic1.jpg" width="200" height="143" alt=""> </div>
-                                                <div class="ttr-post-info">
-                                                    <div class="ttr-post-header">
-                                                        <h6 class="post-title"><a href="#">Introduction English</a></h6>
-                                                    </div>
-                                                    <div class="ttr-post-meta">
-                                                        <ul>
-                                                            <li class="price">
-                                                                <del>$190</del>
-                                                                <h5>$120</h5>
-                                                            </li>
-                                                            <li class="review">03 Review</li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="widget-post clearfix">
-                                                <div class="ttr-post-media"> <img src="assets/images/blog/recent-blog/pic3.jpg" width="200" height="160" alt=""> </div>
-                                                <div class="ttr-post-info">
-                                                    <div class="ttr-post-header">
-                                                        <h6 class="post-title"><a href="#">English For Tommorow</a></h6>
-                                                    </div>
-                                                    <div class="ttr-post-meta">
-                                                        <ul>
-                                                            <li class="price">
-                                                                <h5 class="free">Free</h5>
-                                                            </li>
-                                                            <li class="review">07 Review</li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                        <div class="widget widget-newslatter">
+                                            <h6 class="widget-title">Newsletter</h6>
+                                            <div class="news-box">
+                                                <p>Enter your e-mail and subscribe to our newsletter.</p>
+                                                <form class="subscription-form" action="http://educhamp.themetrades.com/demo/assets/script/mailchamp.php" method="post">
+                                                    <div class="ajax-message"></div>
+                                                    <div class="input-group">
+                                                        <input name="dzEmail" required="required" type="email" class="form-control" placeholder="Your Email Address"/>
+                                                        <button name="submit" value="Submit" type="submit" class="btn black radius-no">
+                                                            <i class="fa fa-paper-plane-o"></i>
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <div class="widget widget_gallery gallery-grid-4">
+                                            <h6 class="widget-title">Our Gallery</h6>
+                                            <ul>
+                                                <li><div><a href="#"><img src="assets/images/gallery/pic2.jpg" alt=""></a></div></li>
+                                                <li><div><a href="#"><img src="assets/images/gallery/pic1.jpg" alt=""></a></div></li>
+                                                <li><div><a href="#"><img src="assets/images/gallery/pic5.jpg" alt=""></a></div></li>
+                                                <li><div><a href="#"><img src="assets/images/gallery/pic7.jpg" alt=""></a></div></li>
+                                                <li><div><a href="#"><img src="assets/images/gallery/pic8.jpg" alt=""></a></div></li>
+                                                <li><div><a href="#"><img src="assets/images/gallery/pic9.jpg" alt=""></a></div></li>
+                                                <li><div><a href="#"><img src="assets/images/gallery/pic3.jpg" alt=""></a></div></li>
+                                                <li><div><a href="#"><img src="assets/images/gallery/pic4.jpg" alt=""></a></div></li>
+                                            </ul>
+                                        </div>
+                                        <div class="widget widget_tag_cloud">
+                                            <h6 class="widget-title">Tags</h6>
+                                            <div class="tagcloud"> 
+                                                <a href="#">Design</a> 
+                                                <a href="#">User interface</a> 
+                                                <a href="#">SEO</a> 
+                                                <a href="#">WordPress</a> 
+                                                <a href="#">Development</a> 
+                                                <a href="#">Joomla</a> 
+                                                <a href="#">Design</a> 
+                                                <a href="#">User interface</a> 
+                                                <a href="#">SEO</a> 
+                                                <a href="#">WordPress</a> 
+                                                <a href="#">Development</a> 
+                                                <a href="#">Joomla</a> 
+                                                <a href="#">Design</a> 
+                                                <a href="#">User interface</a> 
+                                                <a href="#">SEO</a> 
+                                                <a href="#">WordPress</a> 
+                                                <a href="#">Development</a> 
+                                                <a href="#">Joomla</a> 
+                                            </div>
+                                        </div>
+                                    </aside>
                                 </div>
-
-                                <div class="col-lg-6 col-md-8 col-sm-12">
-                                    <div class="courses-post" style="margin-left: 28%; width: 50%;">
-                                        <div class="ttr-post-media media-effect">
-                                            <a href="#"><img src="${requestScope.subject.subjectImage}" alt=""></a>
-                                        </div>
-                                        <div class="ttr-post-info">
-                                            <div class="ttr-post-title ">
-                                                <h2 class="post-title">${requestScope.subject.subjectName}</h2>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <br><!-- comment -->
-                                    <br>
-                                    <div class="courese-overview" id="overview">
-                                        <div class="row">
-                                            <div class="col-md-12 col-lg-12">
-                                                <h5 class="m-b5">Course Description</h5>
-                                                <p>${requestScope.subject.description}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-3 col-md-4 col-sm-12 m-b30">
-                                    <div class="course-detail-bx">
-                                        <div class="course-price">
-                                            <h4 class="price">$${requestScope.subject.price}</h4>
-                                        </div>	
-                                        <div class="course-buy-now text-center">
-                                            <a href="javascript:void(0);" data-toggle="modal" data-target="#pricePackageModal" class="btn radius-xl text-uppercase">Buy Now This Courses</a>
-                                        </div>
-                                        <div class="cours-more-info">
-                                            <div class="review">
-                                                <span>3 Review</span>
-                                                <ul class="cours-star">
-                                                    <li class="active"><i class="fa fa-star"></i></li>
-                                                    <li class="active"><i class="fa fa-star"></i></li>
-                                                    <li class="active"><i class="fa fa-star"></i></li>
-                                                    <li><i class="fa fa-star"></i></li>
-                                                    <li><i class="fa fa-star"></i></li>
-                                                </ul>
-                                            </div>
-                                            <div class="price categories">
-                                                <span>Categories</span>
-                                                <h5 class="text-primary">${requestScope.subject.getCategoryId().categoryName}</h5>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
+                                <!-- Side bar END -->
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- contact area END -->
-
             </div>
+            <!-- Left & right section END -->
             <!-- Content END-->
             <!-- Footer ==== -->
             <footer>
@@ -597,87 +531,10 @@
                         </div>
                     </div>
                 </div>
-                <!-- Price Package Register Modal -->
-
-                <div class="modal fade" id="pricePackageModal" tabindex="-1" role="dialog" aria-labelledby="pricePackageModalLabel">
-                    <div class="modal-dialog" role="document" style="margin-top: 10%;">
-                        <div class="modal-content p-3">
-                            <div class="modal-header">
-                                <h5 class="modal-title font-weight-bold" id="pricePackageModalLabel">Choose price package</h5>
-                                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal" aria-label="Close">x</button>
-                            </div>
-                            <div class="modal-body">
-                                <form action="${pageContext.request.contextPath}/register-subject" id="register-form">
-                                    <div class="form-group">
-                                        <label for="pricePackage">Price Package</label>
-                                        <select id="pricePackage" name="pricePackage" required>
-                                            <option value="1 month access package - 80$">1 month access package - 80$</option>
-                                            <option value="3 month access package - 200$">3 month access package - 200$</option>
-                                            <option value="6 month access package - 350$">6 month access package - 350$</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="name">Name</label>
-                                        <input type="text" class="form-control" id="name" name="name" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="email">Email</label>
-                                        <input type="email" class="form-control" id="email" name="email" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="gender">Gender</label>
-                                        <select class="form-control" id="gender" name="gender" required>
-                                            <option>Male</option>
-                                            <option>Female</option>
-                                            <option>Other</option>
-                                        </select>
-                                    </div>
-                                    <div class="d-flex justify-content-end">
-                                        <button type="button" class="btn btn-secondary mr-2" data-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-primary">Register</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             </footer>
-            <div id="notificationArea" class="mt-3"></div>
             <!-- Footer END ==== -->
-            <!-- Footer END ==== -->
-            <!-- Footer END ==== -->
+            <!-- scroll top button -->
             <button class="back-to-top fa fa-chevron-up" ></button>
-            <!-- 🔘 Nút mở chat -->
-            <div id="chat-toggle" style="position:fixed; bottom:20px; right:20px; background:#007bff; color:#fff; padding:10px 15px; border-radius:50%; cursor:pointer; z-index:9999;">
-                💬
-            </div>
-
-            <!-- 💬 Chatbox -->
-            <div id="chatbox" style="position:fixed; bottom:20px; right:20px; width:300px; height:420px; background:#fff; border:1px solid #ccc; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.1); display:none; flex-direction:column; z-index:9999; font-family:sans-serif;">
-                <div style="background:#007bff; color:#fff; padding:10px; border-radius:8px 8px 0 0; display:flex; justify-content:space-between;">
-                    <span>ChatGPT Bot</span>
-                    <span id="close-chat" style="cursor:pointer;">✖</span>
-                </div>
-
-                <!-- Gợi ý câu hỏi -->
-                <div id="sample-questions" style="padding:10px; background:#f8f9fa; border-bottom:1px solid #ddd;">
-                    <small>💡 Gợi ý nhanh:</small><br>
-                    <button class="sample-btn btn btn-sm btn-outline-primary mt-1">Tôi cần lộ trình học IELTS.</button>
-                    <button class="sample-btn btn btn-sm btn-outline-primary mt-1">Khóa học phù hợp cho người mất gốc?</button>
-                    <button class="sample-btn btn btn-sm btn-outline-primary mt-1">Có khóa học miễn phí không?</button>
-                </div>
-
-                <!-- Lịch sử trò chuyện -->
-                <div id="chat-messages" style="flex:1; padding:10px; overflow-y:auto; font-size:14px;"></div>
-
-                <!-- Input -->
-                <div style="display:flex; border-top:1px solid #eee;">
-                    <input id="chat-input" type="text" placeholder="Nhập câu hỏi..." style="flex:1; border:none; padding:10px; outline:none;">
-                    <button id="send-btn" style="background:#007bff; color:#fff; border:none; padding:10px;">Gửi</button>
-                </div>
-            </div>
-
         </div>
         <!-- External JavaScripts -->
         <script src="assets/js/jquery.min.js"></script>
@@ -692,20 +549,9 @@
         <script src="assets/vendors/masonry/masonry.js"></script>
         <script src="assets/vendors/masonry/filter.js"></script>
         <script src="assets/vendors/owl-carousel/owl.carousel.js"></script>
-        <script src="assets/js/jquery.scroller.js"></script>
         <script src="assets/js/functions.js"></script>
         <script src="assets/js/contact.js"></script>
-        <script src="assets/vendors/switcher/switcher.js"></script>
-        <script>
-
-
-
-<!-- Footer END ==== -->
-<!-- Footer END ==== -->
-<!-- Footer END ==== -->
-
-        </script>
-
+        <script src='assets/vendors/switcher/switcher.js'></script>
     </body>
 
 </html>

@@ -33,6 +33,7 @@
             <div class="breadcrumb">Home > Profile</div>
             <div class="profile-container">
                 <aside class="sidebar">
+                     <!-- META ============================================= -->
                     <div class="avatar-wrapper">
                         <img id="avatar" src="${sessionScope.user.profileImage}" class="avatar" />
                         <form action="upload-avatar" method="post" enctype="multipart/form-data">
@@ -76,6 +77,7 @@
             }
 
         </script>
+         <!-- META ============================================= -->
     </body>
 </html>
 
