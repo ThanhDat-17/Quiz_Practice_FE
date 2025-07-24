@@ -197,4 +197,25 @@ public class UserDAO {
             System.out.println(e.getMessage());
         }
     }
+    
+    public void update(String description,String fullName,String profileImage,Boolean gender,int userId) {
+        String query = "UPDATE [dbo].[users]\n"
+                + "   SET [description] = ?\n"
+                + "      ,[full_name] = ?\n"
+                + "      ,[profile_image] = ?\n"
+                + "      ,[updated_date] = getdate()\n"
+                + "      ,[gender] = ?\n"
+                + " WHERE user_id = ?";
+        Connection conn = new DBContext().getConnection();
+
+        try ( PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, description);
+            ps.setString(2, fullName);
+            ps.setString(3, profileImage);
+            ps.setBoolean(4, gender);
+            ps.setInt(5, userId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+        }
+    }
 }
