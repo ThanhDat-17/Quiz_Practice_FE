@@ -1,18 +1,18 @@
 package dao;
 
+import model.Quiz;
+import utils.DBContext;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import model.Quiz;
-import model.Subject;
-import utils.DBContext;
 
 public class QuizDAO {
     private Connection connection;
 
     public QuizDAO() {
         try {
-            connection = new DBContext().getConnection();
+            connection = DBContext.getConnection();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -22,9 +22,11 @@ public class QuizDAO {
     public List<Quiz> getAllQuizzes(int page, int pageSize) {
         List<Quiz> quizzes = new ArrayList<>();
         String sql = "SELECT q.quiz_id, q.quiz_name, q.description, q.subject_id, s.subject_name, " +
-                    "q.level, q.duration, q.pass_rate, q.type, q.total_questions, q.is_active, " +
-                    "q.created_date, q.updated_date, q.created_by " +
-                    "FROM quizzes q LEFT JOIN subjects s ON q.subject_id = s.subject_id " +
+                    "q.level, q.duration, q.pass_rate, q.quiz_type, q.number_of_questions, " +
+                    "q.is_active, q.created_date, q.updated_date, q.created_by, u.full_name as created_by_name " +
+                    "FROM quizzes q " +
+                    "LEFT JOIN subjects s ON q.subject_id = s.subject_id " +
+                    "LEFT JOIN users u ON q.created_by = u.user_id " +
                     "ORDER BY q.quiz_id DESC " +
                     "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
         
@@ -45,42 +47,49 @@ public class QuizDAO {
         return quizzes;
     }
 
-    // Search quizzes by name with filters and pagination
-    public List<Quiz> searchQuizzes(String searchKeyword, String subjectFilter, String typeFilter, int page, int pageSize) {
+    // Search quizzes by name, subject, and type with pagination
+    public List<Quiz> searchQuizzes(String searchName, Integer subjectId, String quizType, int page, int pageSize) {
         List<Quiz> quizzes = new ArrayList<>();
-        StringBuilder sql = new StringBuilder();
-        sql.append("SELECT q.quiz_id, q.quiz_name, q.description, q.subject_id, s.subject_name, ");
-        sql.append("q.level, q.duration, q.pass_rate, q.type, q.total_questions, q.is_active, ");
-        sql.append("q.created_date, q.updated_date, q.created_by ");
-        sql.append("FROM quizzes q LEFT JOIN subjects s ON q.subject_id = s.subject_id ");
-        sql.append("WHERE 1=1 ");
+        StringBuilder sql = new StringBuilder(
+            "SELECT q.quiz_id, q.quiz_name, q.description, q.subject_id, s.subject_name, " +
+            "q.level, q.duration, q.pass_rate, q.quiz_type, q.number_of_questions, " +
+            "q.is_active, q.created_date, q.updated_date, q.created_by, u.full_name as created_by_name " +
+            "FROM quizzes q " +
+            "LEFT JOIN subjects s ON q.subject_id = s.subject_id " +
+            "LEFT JOIN users u ON q.created_by = u.user_id WHERE 1=1"
+        );
         
-        List<Object> params = new ArrayList<>();
-        
-        if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
-            sql.append("AND q.quiz_name LIKE ? ");
-            params.add("%" + searchKeyword.trim() + "%");
+        if (searchName != null && !searchName.trim().isEmpty()) {
+            sql.append(" AND q.quiz_name LIKE ?");
         }
         
-        if (subjectFilter != null && !subjectFilter.isEmpty() && !"all".equals(subjectFilter)) {
-            sql.append("AND q.subject_id = ? ");
-            params.add(Integer.parseInt(subjectFilter));
+        if (subjectId != null && subjectId > 0) {
+            sql.append(" AND q.subject_id = ?");
         }
         
-        if (typeFilter != null && !typeFilter.isEmpty() && !"all".equals(typeFilter)) {
-            sql.append("AND q.type = ? ");
-            params.add(typeFilter);
+        if (quizType != null && !quizType.trim().isEmpty() && !"ALL".equals(quizType)) {
+            sql.append(" AND q.quiz_type = ?");
         }
         
-        sql.append("ORDER BY q.quiz_id DESC ");
-        sql.append("OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
-        params.add((page - 1) * pageSize);
-        params.add(pageSize);
+        sql.append(" ORDER BY q.quiz_id DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
         
         try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
-            for (int i = 0; i < params.size(); i++) {
-                ps.setObject(i + 1, params.get(i));
+            int paramIndex = 1;
+            
+            if (searchName != null && !searchName.trim().isEmpty()) {
+                ps.setString(paramIndex++, "%" + searchName.trim() + "%");
             }
+            
+            if (subjectId != null && subjectId > 0) {
+                ps.setInt(paramIndex++, subjectId);
+            }
+            
+            if (quizType != null && !quizType.trim().isEmpty() && !"ALL".equals(quizType)) {
+                ps.setString(paramIndex++, quizType);
+            }
+            
+            ps.setInt(paramIndex++, (page - 1) * pageSize);
+            ps.setInt(paramIndex, pageSize);
             
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -98,42 +107,49 @@ public class QuizDAO {
     // Get total count of quizzes
     public int getTotalQuizzesCount() {
         String sql = "SELECT COUNT(*) FROM quizzes";
+        
         try (PreparedStatement ps = connection.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
+            
             if (rs.next()) {
                 return rs.getInt(1);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        
         return 0;
     }
 
-    // Get total count of search results
-    public int getSearchQuizzesCount(String searchKeyword, String subjectFilter, String typeFilter) {
-        StringBuilder sql = new StringBuilder();
-        sql.append("SELECT COUNT(*) FROM quizzes q WHERE 1=1 ");
+    // Get search count
+    public int getSearchQuizzesCount(String searchName, Integer subjectId, String quizType) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM quizzes q WHERE 1=1");
         
-        List<Object> params = new ArrayList<>();
-        
-        if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
-            sql.append("AND q.quiz_name LIKE ? ");
-            params.add("%" + searchKeyword.trim() + "%");
+        if (searchName != null && !searchName.trim().isEmpty()) {
+            sql.append(" AND q.quiz_name LIKE ?");
         }
         
-        if (subjectFilter != null && !subjectFilter.isEmpty() && !"all".equals(subjectFilter)) {
-            sql.append("AND q.subject_id = ? ");
-            params.add(Integer.parseInt(subjectFilter));
+        if (subjectId != null && subjectId > 0) {
+            sql.append(" AND q.subject_id = ?");
         }
         
-        if (typeFilter != null && !typeFilter.isEmpty() && !"all".equals(typeFilter)) {
-            sql.append("AND q.type = ? ");
-            params.add(typeFilter);
+        if (quizType != null && !quizType.trim().isEmpty() && !"ALL".equals(quizType)) {
+            sql.append(" AND q.quiz_type = ?");
         }
         
         try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
-            for (int i = 0; i < params.size(); i++) {
-                ps.setObject(i + 1, params.get(i));
+            int paramIndex = 1;
+            
+            if (searchName != null && !searchName.trim().isEmpty()) {
+                ps.setString(paramIndex++, "%" + searchName.trim() + "%");
+            }
+            
+            if (subjectId != null && subjectId > 0) {
+                ps.setInt(paramIndex++, subjectId);
+            }
+            
+            if (quizType != null && !quizType.trim().isEmpty() && !"ALL".equals(quizType)) {
+                ps.setString(paramIndex, quizType);
             }
             
             try (ResultSet rs = ps.executeQuery()) {
@@ -144,15 +160,18 @@ public class QuizDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        
         return 0;
     }
 
     // Get quiz by ID
     public Quiz getQuizById(int quizId) {
         String sql = "SELECT q.quiz_id, q.quiz_name, q.description, q.subject_id, s.subject_name, " +
-                    "q.level, q.duration, q.pass_rate, q.type, q.total_questions, q.is_active, " +
-                    "q.created_date, q.updated_date, q.created_by " +
-                    "FROM quizzes q LEFT JOIN subjects s ON q.subject_id = s.subject_id " +
+                    "q.level, q.duration, q.pass_rate, q.quiz_type, q.number_of_questions, " +
+                    "q.is_active, q.created_date, q.updated_date, q.created_by, u.full_name as created_by_name " +
+                    "FROM quizzes q " +
+                    "LEFT JOIN subjects s ON q.subject_id = s.subject_id " +
+                    "LEFT JOIN users u ON q.created_by = u.user_id " +
                     "WHERE q.quiz_id = ?";
         
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -173,8 +192,8 @@ public class QuizDAO {
     // Insert new quiz
     public boolean insertQuiz(Quiz quiz) {
         String sql = "INSERT INTO quizzes (quiz_name, description, subject_id, level, duration, " +
-                    "pass_rate, type, total_questions, is_active, created_date, updated_date, created_by) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, GETDATE(), GETDATE(), ?)";
+                    "pass_rate, quiz_type, number_of_questions, is_active, created_date, " +
+                    "updated_date, created_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, GETDATE(), GETDATE(), ?)";
         
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, quiz.getQuizName());
@@ -183,11 +202,10 @@ public class QuizDAO {
             ps.setString(4, quiz.getLevel());
             ps.setInt(5, quiz.getDuration());
             ps.setDouble(6, quiz.getPassRate());
-            ps.setString(7, quiz.getType());
-            ps.setInt(8, quiz.getTotalQuestions());
+            ps.setString(7, quiz.getQuizType());
+            ps.setInt(8, quiz.getNumberOfQuestions());
             ps.setBoolean(9, quiz.isActive());
             ps.setInt(10, quiz.getCreatedBy());
-            
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -198,8 +216,8 @@ public class QuizDAO {
     // Update quiz
     public boolean updateQuiz(Quiz quiz) {
         String sql = "UPDATE quizzes SET quiz_name = ?, description = ?, subject_id = ?, level = ?, " +
-                    "duration = ?, pass_rate = ?, type = ?, is_active = ?, " +
-                    "updated_date = GETDATE() WHERE quiz_id = ?";
+                    "duration = ?, pass_rate = ?, quiz_type = ?, number_of_questions = ?, " +
+                    "is_active = ?, updated_date = GETDATE() WHERE quiz_id = ?";
         
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, quiz.getQuizName());
@@ -208,10 +226,10 @@ public class QuizDAO {
             ps.setString(4, quiz.getLevel());
             ps.setInt(5, quiz.getDuration());
             ps.setDouble(6, quiz.getPassRate());
-            ps.setString(7, quiz.getType());
-            ps.setBoolean(8, quiz.isActive());
-            ps.setInt(9, quiz.getQuizId());
-            
+            ps.setString(7, quiz.getQuizType());
+            ps.setInt(8, quiz.getNumberOfQuestions());
+            ps.setBoolean(9, quiz.isActive());
+            ps.setInt(10, quiz.getQuizId());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -232,28 +250,26 @@ public class QuizDAO {
         }
     }
 
-    // Get all subjects for dropdown
-    public List<Subject> getAllSubjects() {
-        List<Subject> subjects = new ArrayList<>();
-        String sql = "SELECT subject_id, subject_name FROM subjects WHERE is_active = 1 ORDER BY subject_name";
+    // Get quiz count by subject
+    public int getQuizCountBySubject(int subjectId) {
+        String sql = "SELECT COUNT(*) FROM quizzes WHERE subject_id = ? AND is_active = 1";
         
-        try (PreparedStatement ps = connection.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, subjectId);
             
-            while (rs.next()) {
-                Subject subject = new Subject();
-                subject.setSubjectId(rs.getInt("subject_id"));
-                subject.setSubjectName(rs.getString("subject_name"));
-                subjects.add(subject);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         
-        return subjects;
+        return 0;
     }
 
-    // Helper method to create Quiz from ResultSet
+    // Helper method to create Quiz object from ResultSet
     private Quiz createQuizFromResultSet(ResultSet rs) throws SQLException {
         Quiz quiz = new Quiz();
         quiz.setQuizId(rs.getInt("quiz_id"));
@@ -264,12 +280,13 @@ public class QuizDAO {
         quiz.setLevel(rs.getString("level"));
         quiz.setDuration(rs.getInt("duration"));
         quiz.setPassRate(rs.getDouble("pass_rate"));
-        quiz.setType(rs.getString("type"));
-        quiz.setTotalQuestions(rs.getInt("total_questions"));
+        quiz.setQuizType(rs.getString("quiz_type"));
+        quiz.setNumberOfQuestions(rs.getInt("number_of_questions"));
         quiz.setActive(rs.getBoolean("is_active"));
         quiz.setCreatedDate(rs.getTimestamp("created_date"));
         quiz.setUpdatedDate(rs.getTimestamp("updated_date"));
         quiz.setCreatedBy(rs.getInt("created_by"));
+        quiz.setCreatedByName(rs.getString("created_by_name"));
         return quiz;
     }
 

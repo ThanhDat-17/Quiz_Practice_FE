@@ -1,6 +1,7 @@
 package Controller;
 
 import dao.QuizDAO;
+import dao.SubjectDAO;
 import model.Quiz;
 import model.Subject;
 
@@ -17,10 +18,12 @@ import java.util.List;
 @WebServlet("/admin/quiz")
 public class QuizController extends HttpServlet {
     private QuizDAO quizDAO;
+    private SubjectDAO subjectDAO;
 
     @Override
     public void init() throws ServletException {
         quizDAO = new QuizDAO();
+        subjectDAO = new SubjectDAO();
     }
 
     @Override
@@ -28,15 +31,29 @@ public class QuizController extends HttpServlet {
             throws ServletException, IOException {
         
         String action = request.getParameter("action");
-        
-        if ("add".equals(action)) {
-            showAddForm(request, response);
-        } else if ("edit".equals(action)) {
-            showEditForm(request, response);
-        } else if ("delete".equals(action)) {
-            deleteQuiz(request, response);
-        } else {
-            listQuizzes(request, response);
+        if (action == null) {
+            action = "list";
+        }
+
+        switch (action) {
+            case "list":
+                listQuizzes(request, response);
+                break;
+            case "search":
+                searchQuizzes(request, response);
+                break;
+            case "edit":
+                showEditForm(request, response);
+                break;
+            case "add":
+                showAddForm(request, response);
+                break;
+            case "delete":
+                deleteQuiz(request, response);
+                break;
+            default:
+                listQuizzes(request, response);
+                break;
         }
     }
 
@@ -65,24 +82,32 @@ public class QuizController extends HttpServlet {
         if (pageParam != null && !pageParam.isEmpty()) {
             try {
                 page = Integer.parseInt(pageParam);
-                if (page < 1) page = 1;
             } catch (NumberFormatException e) {
                 page = 1;
             }
         }
 
+        String pageSizeParam = request.getParameter("pageSize");
+        if (pageSizeParam != null && !pageSizeParam.isEmpty()) {
+            try {
+                pageSize = Integer.parseInt(pageSizeParam);
+                if (pageSize < 1) pageSize = 10;
+            } catch (NumberFormatException e) {
+                pageSize = 10;
+            }
+        }
+
         List<Quiz> quizzes = quizDAO.getAllQuizzes(page, pageSize);
+        List<Subject> subjects = subjectDAO.getAllSubjects(1, 1000);
         int totalQuizzes = quizDAO.getTotalQuizzesCount();
         int totalPages = (int) Math.ceil((double) totalQuizzes / pageSize);
 
-        // Get subjects for filter dropdown
-        List<Subject> subjects = quizDAO.getAllSubjects();
-
         request.setAttribute("quizzes", quizzes);
+        request.setAttribute("subjects", subjects);
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("totalQuizzes", totalQuizzes);
-        request.setAttribute("subjects", subjects);
+        request.setAttribute("pageSize", pageSize);
 
         request.getRequestDispatcher("/admin/quiz-list.jsp").forward(request, response);
     }
@@ -90,11 +115,18 @@ public class QuizController extends HttpServlet {
     private void searchQuizzes(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        String searchKeyword = request.getParameter("search");
-        String subjectFilter = request.getParameter("subjectFilter");
-        String typeFilter = request.getParameter("typeFilter");
+        String searchName = request.getParameter("searchName");
+        String subjectIdParam = request.getParameter("subjectId");
+        String quizType = request.getParameter("quizType");
         
-        if (searchKeyword == null) searchKeyword = "";
+        Integer subjectId = null;
+        if (subjectIdParam != null && !subjectIdParam.isEmpty() && !"0".equals(subjectIdParam)) {
+            try {
+                subjectId = Integer.parseInt(subjectIdParam);
+            } catch (NumberFormatException e) {
+                subjectId = null;
+            }
+        }
         
         int page = 1;
         int pageSize = 10;
@@ -103,50 +135,37 @@ public class QuizController extends HttpServlet {
         if (pageParam != null && !pageParam.isEmpty()) {
             try {
                 page = Integer.parseInt(pageParam);
-                if (page < 1) page = 1;
             } catch (NumberFormatException e) {
                 page = 1;
             }
         }
 
-        List<Quiz> quizzes;
-        int totalQuizzes;
-        
-        if (searchKeyword.trim().isEmpty() && 
-            (subjectFilter == null || "all".equals(subjectFilter)) && 
-            (typeFilter == null || "all".equals(typeFilter))) {
-            quizzes = quizDAO.getAllQuizzes(page, pageSize);
-            totalQuizzes = quizDAO.getTotalQuizzesCount();
-        } else {
-            quizzes = quizDAO.searchQuizzes(searchKeyword, subjectFilter, typeFilter, page, pageSize);
-            totalQuizzes = quizDAO.getSearchQuizzesCount(searchKeyword, subjectFilter, typeFilter);
+        String pageSizeParam = request.getParameter("pageSize");
+        if (pageSizeParam != null && !pageSizeParam.isEmpty()) {
+            try {
+                pageSize = Integer.parseInt(pageSizeParam);
+                if (pageSize < 1) pageSize = 10;
+            } catch (NumberFormatException e) {
+                pageSize = 10;
+            }
         }
-        
+
+        List<Quiz> quizzes = quizDAO.searchQuizzes(searchName, subjectId, quizType, page, pageSize);
+        List<Subject> subjects = subjectDAO.getAllSubjects(1, 1000);
+        int totalQuizzes = quizDAO.getSearchQuizzesCount(searchName, subjectId, quizType);
         int totalPages = (int) Math.ceil((double) totalQuizzes / pageSize);
 
-        // Get subjects for filter dropdown
-        List<Subject> subjects = quizDAO.getAllSubjects();
-
         request.setAttribute("quizzes", quizzes);
+        request.setAttribute("subjects", subjects);
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("totalQuizzes", totalQuizzes);
-        request.setAttribute("subjects", subjects);
-        request.setAttribute("searchKeyword", searchKeyword);
-        request.setAttribute("subjectFilter", subjectFilter);
-        request.setAttribute("typeFilter", typeFilter);
+        request.setAttribute("pageSize", pageSize);
+        request.setAttribute("searchName", searchName);
+        request.setAttribute("selectedSubjectId", subjectId);
+        request.setAttribute("selectedQuizType", quizType);
 
         request.getRequestDispatcher("/admin/quiz-list.jsp").forward(request, response);
-    }
-
-    private void showAddForm(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
-        // Get subjects for dropdown
-        List<Subject> subjects = quizDAO.getAllSubjects();
-        request.setAttribute("subjects", subjects);
-        
-        request.getRequestDispatcher("/admin/quiz-form.jsp").forward(request, response);
     }
 
     private void showEditForm(HttpServletRequest request, HttpServletResponse response)
@@ -155,10 +174,30 @@ public class QuizController extends HttpServlet {
         int quizId = Integer.parseInt(request.getParameter("id"));
         Quiz quiz = quizDAO.getQuizById(quizId);
         
-        // Get subjects for dropdown
-        List<Subject> subjects = quizDAO.getAllSubjects();
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
         
-        request.setAttribute("quiz", quiz);
+        StringBuilder json = new StringBuilder();
+        json.append("{");
+        json.append("\"quizId\":").append(quiz.getQuizId()).append(",");
+        json.append("\"quizName\":\"").append(escapeJson(quiz.getQuizName())).append("\",");
+        json.append("\"description\":\"").append(escapeJson(quiz.getDescription() != null ? quiz.getDescription() : "")).append("\",");
+        json.append("\"subjectId\":").append(quiz.getSubjectId()).append(",");
+        json.append("\"level\":\"").append(quiz.getLevel()).append("\",");
+        json.append("\"duration\":").append(quiz.getDuration()).append(",");
+        json.append("\"passRate\":").append(quiz.getPassRate()).append(",");
+        json.append("\"quizType\":\"").append(quiz.getQuizType()).append("\",");
+        json.append("\"numberOfQuestions\":").append(quiz.getNumberOfQuestions()).append(",");
+        json.append("\"isActive\":").append(quiz.isActive());
+        json.append("}");
+        
+        response.getWriter().write(json.toString());
+    }
+
+    private void showAddForm(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        List<Subject> subjects = subjectDAO.getAllSubjects(1, 1000);
         request.setAttribute("subjects", subjects);
         request.getRequestDispatcher("/admin/quiz-form.jsp").forward(request, response);
     }
@@ -166,22 +205,30 @@ public class QuizController extends HttpServlet {
     private void saveQuiz(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
+        HttpSession session = request.getSession();
+        
         try {
-            Quiz quiz = new Quiz();
-            quiz.setQuizName(request.getParameter("quizName"));
-            quiz.setDescription(request.getParameter("description"));
-            quiz.setSubjectId(Integer.parseInt(request.getParameter("subjectId")));
-            quiz.setLevel(request.getParameter("level"));
-            quiz.setDuration(Integer.parseInt(request.getParameter("duration")));
-            quiz.setPassRate(Double.parseDouble(request.getParameter("passRate")));
-            quiz.setType(request.getParameter("type"));
-            quiz.setTotalQuestions(0); // Will be auto-calculated when questions are added
-            quiz.setActive("on".equals(request.getParameter("isActive")));
-            quiz.setCreatedBy(1); // TODO: Get from session
+            String quizName = request.getParameter("quizName");
+            String description = request.getParameter("description");
+            int subjectId = Integer.parseInt(request.getParameter("subjectId"));
+            String level = request.getParameter("level");
+            int duration = Integer.parseInt(request.getParameter("duration"));
+            double passRate = Double.parseDouble(request.getParameter("passRate"));
+            String quizType = request.getParameter("quizType");
+            int numberOfQuestions = Integer.parseInt(request.getParameter("numberOfQuestions"));
+            boolean isActive = "true".equals(request.getParameter("isActive"));
             
-            HttpSession session = request.getSession();
+            Integer currentUserId = (Integer) session.getAttribute("userId");
+            if (currentUserId == null) {
+                currentUserId = 1;
+            }
+
+            Quiz quiz = new Quiz(quizName, description, subjectId, level, duration, 
+                               passRate, quizType, numberOfQuestions, isActive, currentUserId);
+
+            boolean success = quizDAO.insertQuiz(quiz);
             
-            if (quizDAO.insertQuiz(quiz)) {
+            if (success) {
                 session.setAttribute("message", "Quiz created successfully!");
                 session.setAttribute("messageType", "success");
             } else {
@@ -189,9 +236,11 @@ public class QuizController extends HttpServlet {
                 session.setAttribute("messageType", "danger");
             }
             
+        } catch (NumberFormatException e) {
+            session.setAttribute("message", "Invalid input format. Please check your data.");
+            session.setAttribute("messageType", "danger");
         } catch (Exception e) {
-            HttpSession session = request.getSession();
-            session.setAttribute("message", "Error: " + e.getMessage());
+            session.setAttribute("message", "An error occurred: " + e.getMessage());
             session.setAttribute("messageType", "danger");
         }
         
@@ -201,22 +250,35 @@ public class QuizController extends HttpServlet {
     private void updateQuiz(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
+        HttpSession session = request.getSession();
+        
         try {
+            int quizId = Integer.parseInt(request.getParameter("quizId"));
+            String quizName = request.getParameter("quizName");
+            String description = request.getParameter("description");
+            int subjectId = Integer.parseInt(request.getParameter("subjectId"));
+            String level = request.getParameter("level");
+            int duration = Integer.parseInt(request.getParameter("duration"));
+            double passRate = Double.parseDouble(request.getParameter("passRate"));
+            String quizType = request.getParameter("quizType");
+            int numberOfQuestions = Integer.parseInt(request.getParameter("numberOfQuestions"));
+            boolean isActive = "true".equals(request.getParameter("isActive"));
+
             Quiz quiz = new Quiz();
-            quiz.setQuizId(Integer.parseInt(request.getParameter("quizId")));
-            quiz.setQuizName(request.getParameter("quizName"));
-            quiz.setDescription(request.getParameter("description"));
-            quiz.setSubjectId(Integer.parseInt(request.getParameter("subjectId")));
-            quiz.setLevel(request.getParameter("level"));
-            quiz.setDuration(Integer.parseInt(request.getParameter("duration")));
-            quiz.setPassRate(Double.parseDouble(request.getParameter("passRate")));
-            quiz.setType(request.getParameter("type"));
-            quiz.setTotalQuestions(0); // Questions count will be auto-calculated, this field will be ignored in update
-            quiz.setActive("on".equals(request.getParameter("isActive")));
+            quiz.setQuizId(quizId);
+            quiz.setQuizName(quizName);
+            quiz.setDescription(description);
+            quiz.setSubjectId(subjectId);
+            quiz.setLevel(level);
+            quiz.setDuration(duration);
+            quiz.setPassRate(passRate);
+            quiz.setQuizType(quizType);
+            quiz.setNumberOfQuestions(numberOfQuestions);
+            quiz.setActive(isActive);
+
+            boolean success = quizDAO.updateQuiz(quiz);
             
-            HttpSession session = request.getSession();
-            
-            if (quizDAO.updateQuiz(quiz)) {
+            if (success) {
                 session.setAttribute("message", "Quiz updated successfully!");
                 session.setAttribute("messageType", "success");
             } else {
@@ -224,9 +286,11 @@ public class QuizController extends HttpServlet {
                 session.setAttribute("messageType", "danger");
             }
             
+        } catch (NumberFormatException e) {
+            session.setAttribute("message", "Invalid input format. Please check your data.");
+            session.setAttribute("messageType", "danger");
         } catch (Exception e) {
-            HttpSession session = request.getSession();
-            session.setAttribute("message", "Error: " + e.getMessage());
+            session.setAttribute("message", "An error occurred: " + e.getMessage());
             session.setAttribute("messageType", "danger");
         }
         
@@ -236,12 +300,13 @@ public class QuizController extends HttpServlet {
     private void deleteQuiz(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
+        HttpSession session = request.getSession();
+        
         try {
             int quizId = Integer.parseInt(request.getParameter("id"));
+            boolean success = quizDAO.deleteQuiz(quizId);
             
-            HttpSession session = request.getSession();
-            
-            if (quizDAO.deleteQuiz(quizId)) {
+            if (success) {
                 session.setAttribute("message", "Quiz deleted successfully!");
                 session.setAttribute("messageType", "success");
             } else {
@@ -249,19 +314,33 @@ public class QuizController extends HttpServlet {
                 session.setAttribute("messageType", "danger");
             }
             
+        } catch (NumberFormatException e) {
+            session.setAttribute("message", "Invalid quiz ID.");
+            session.setAttribute("messageType", "danger");
         } catch (Exception e) {
-            HttpSession session = request.getSession();
-            session.setAttribute("message", "Error: " + e.getMessage());
+            session.setAttribute("message", "An error occurred: " + e.getMessage());
             session.setAttribute("messageType", "danger");
         }
         
         response.sendRedirect(request.getContextPath() + "/admin/quiz");
     }
 
+    private String escapeJson(String input) {
+        if (input == null) return "";
+        return input.replace("\"", "\\\"")
+                   .replace("\\", "\\\\")
+                   .replace("\r", "\\r")
+                   .replace("\n", "\\n")
+                   .replace("\t", "\\t");
+    }
+
     @Override
     public void destroy() {
         if (quizDAO != null) {
             quizDAO.close();
+        }
+        if (subjectDAO != null) {
+            subjectDAO.close();
         }
     }
 } 

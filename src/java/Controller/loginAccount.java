@@ -4,8 +4,8 @@
  */
 package Controller;
 
-import dao.LoginDAO;
-import model.Users;
+import Dal.LoginDAO;
+import entity.Users;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -14,9 +14,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import utils.validation;
 
 /**
  *
@@ -26,6 +24,7 @@ import java.util.logging.Logger;
 public class loginAccount extends HttpServlet {
 
     @Override
+    //Hiển thị trang đăng nhập (login.jsp) kèm theo thông báo lỗi (nếu có)//
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -34,76 +33,71 @@ public class loginAccount extends HttpServlet {
             request.setAttribute("error", error);
             session.removeAttribute("error");
         }
-        request.getRequestDispatcher("index.html").forward(request, response);
+        request.getRequestDispatcher("login.jsp").forward(request, response);
     }
 
-@Override
+    @Override
 protected void doPost(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
-        try {
-            HttpSession session = request.getSession();
-            
-            // Kiểm tra số lần đăng nhập sai và thời điểm bị khóa
-            Integer loginAttempts = (Integer) session.getAttribute("loginAttempts");
-            Long lockTime = (Long) session.getAttribute("lockTime");
-            
-            // Nếu đang bị khóa đăng nhập
-            if (lockTime != null) {
-                long currentTime = System.currentTimeMillis();
-                long timePassed = currentTime - lockTime;
-                
-                if (timePassed < 60 * 1000) { // chưa đủ 1 phút
-                    request.setAttribute("error", "You have entered incorrect credentials more than 5 times. Please try again after 1 minute..");
-                    request.getRequestDispatcher("login.jsp").forward(request, response);
-                    return;
-                } else {
-                    // Đã qua 1 phút: reset lại số lần thử và thời gian khóa
-                    session.removeAttribute("lockTime");
-                    session.removeAttribute("loginAttempts");
-                    loginAttempts = 0;
-                }
-            }
-            
-            // Xử lý đăng nhập
-            String username = request.getParameter("username").trim();
-            String password = request.getParameter("password").trim();
-            LoginDAO loginDAO = new LoginDAO();
-            Users users = loginDAO.getUserByUserAndPass(username, password);
-            
-            if (users == null) {
-                if (loginAttempts == null) {
-                    loginAttempts = 1;
-                } else {
-                    loginAttempts++;
-                }
-                
-                session.setAttribute("loginAttempts", loginAttempts);
-                
-                if (loginAttempts >= 5) {
-                    session.setAttribute("lockTime", System.currentTimeMillis());
-                    request.setAttribute("error", "You have entered incorrect credentials more than 5 times. Please try again after 1 minute..");
-                } else {
-                    request.setAttribute("error", "Incorrect email or password.");
-                }
-                
-                request.getRequestDispatcher("login.jsp").forward(request, response);
-            } else {
-                // Đăng nhập thành công => xóa dữ liệu tạm trong session
-                session.removeAttribute("loginAttempts");
-                session.removeAttribute("lockTime");
-                session.setAttribute("user", users);
-                response.sendRedirect("courses.jsp");
-            }   } catch (ClassNotFoundException ex) {
-            Logger.getLogger(loginAccount.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(loginAccount.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    HttpSession session = request.getSession();
+
+    // Lấy thông tin người dùng từ form, loại bỏ khoảng trắng
+    String username = request.getParameter("username").trim();
+    String password = request.getParameter("password").trim();
+
+    // Kiểm tra định dạng email
+    if (!validation.isValidEmail(username)) {
+        request.setAttribute("error", "Incorrect email format (missing @ or .).");
+        request.getRequestDispatcher("login.jsp").forward(request, response);
+        return;
+    }
+
+    LoginDAO loginDAO = new LoginDAO();
+    Users userByEmail = loginDAO.getUserByEmail(username);
+
+    if (userByEmail == null) {
+        // Email không tồn tại trong database
+        request.setAttribute("error", "Incorrect or unregistered account.");
+        request.getRequestDispatcher("login.jsp").forward(request, response);
+        return;
+    }
+
+    // Kiểm tra mật khẩu
+    if (!userByEmail.getPassword().equals(password)) {
+        request.setAttribute("error", "Password is incorrect.");
+        request.getRequestDispatcher("login.jsp").forward(request, response);
+        return;
+    }
+
+    // nếu tk bị khoá
+    if (!userByEmail.getIsActive()) {
+        request.setAttribute("error", "Account locked.");
+        request.getRequestDispatcher("login.jsp").forward(request, response);
+        return;
+    }
+
+    // Đăng nhập thành công
+    session.setAttribute("user", userByEmail);
+
+    switch (userByEmail.getRoleId()) {
+        case 1:
+            response.sendRedirect("customer.jsp");
+            break;
+        case 2:
+            response.sendRedirect("expert.jsp");
+            break;
+        case 3:
+            response.sendRedirect("subjectDimension");
+            break;
+        case 4:
+            response.sendRedirect("sale.jsp");
+            break;
+        case 5:
+            response.sendRedirect("marketing screen.jsp");
+            break;
+        default:
+            response.sendRedirect("login.jsp");
+            break;
+    }
 }
-
-
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
 }
