@@ -169,4 +169,32 @@ public class UserDAO {
             System.out.println(e.getMessage());
         }
     }
+    
+    public void insert(Users user) {
+        String query = "INSERT INTO [dbo].[users]\n"
+                + "           ([created_date]\n"
+                + "           ,[email]\n"
+                + "           ,[full_name]\n"
+                + "           ,[is_active]\n"
+                + "		   ,[role_id]\n"
+                + "           ,[password]\n"
+                + "		   )\n"
+                + "     VALUES\n"
+                + "           (GETDATE()\n"
+                + "           ,?\n"
+                + "           ,?\n"
+                + "           ,1\n"
+                + "		   ,1\n"
+                + "           ,?)";
+        Connection conn = new DBContext().getConnection();
+
+        try ( PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, user.getEmail());
+            ps.setString(2, user.getFullName());
+            ps.setString(3, user.getPassword());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }
