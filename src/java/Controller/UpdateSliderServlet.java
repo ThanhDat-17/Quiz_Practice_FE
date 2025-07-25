@@ -50,25 +50,26 @@ public class UpdateSliderServlet extends HttpServlet {
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         try {
-            String idParam = request.getParameter("slider_id");
             String action = request.getParameter("action");
+            String idParam = request.getParameter("slider_id");
+            if (idParam == null || idParam.isEmpty()) {
+                idParam = request.getParameter("id"); // fallback to id from URL
+            }
+            Connection conn = DBContext.getInstance().getConnection();
+            SliderDAO dao = new SliderDAO(conn);
+            if ("delete".equals(action) && idParam != null && !idParam.isEmpty()) {
+                int id = Integer.parseInt(idParam);
+                dao.deleteSlider(id);
+                response.sendRedirect(request.getContextPath() + "/admin/slider-list");
+                return;
+            }
+            // Only process multipart/form-data for add/edit
             String title = request.getParameter("title");
             String backlink = request.getParameter("backlink");
             String status = request.getParameter("status");
             String notes = request.getParameter("notes");
             String oldImage = request.getParameter("oldImage");
             String imageUrl = handleImageUpload(request, "imageFile", oldImage);
-
-            Connection conn = DBContext.getInstance().getConnection();
-            SliderDAO dao = new SliderDAO(conn);
-
-            if ("delete".equals(action) && idParam != null && !idParam.isEmpty()) {
-                int id = Integer.parseInt(request.getParameter("id") != null ? request.getParameter("id") : idParam);
-                dao.deleteSlider(id);
-                response.sendRedirect(request.getContextPath() + "/admin/slider-list");
-                return;
-            }
-
             if (idParam != null && !idParam.isEmpty()) {
                 // Update
                 int id = Integer.parseInt(idParam);
@@ -89,8 +90,15 @@ public class UpdateSliderServlet extends HttpServlet {
     // 👇 Tách riêng xử lý upload ảnh cho gọn
     private String handleImageUpload(HttpServletRequest request, String partName, String oldImage)
             throws IOException, ServletException {
-
-        Part imagePart = request.getPart(partName);
+        Part imagePart = null;
+        try {
+            imagePart = request.getPart(partName);
+        } catch (Exception e) {
+            // Ignore, treat as no file uploaded
+        }
+        if (imagePart == null) {
+            return oldImage;
+        }
         String fileName = Paths.get(imagePart.getSubmittedFileName()).getFileName().toString();
 
         if (fileName != null && !fileName.isEmpty()) {
