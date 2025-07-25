@@ -97,17 +97,20 @@
                         <i class="fas fa-cogs"></i> Admin Panel
                     </h4>
                     <nav class="nav flex-column">
-                        <a class="nav-link active" href="${pageContext.request.contextPath}/admin/blog">
+                        <a class="nav-link${pageContext.request.servletPath eq '/admin/blog' ? ' active' : ''}" href="${pageContext.request.contextPath}/admin/blog">
                             <i class="fas fa-blog"></i> Blog Management
                         </a>
-                        <a class="nav-link" href="${pageContext.request.contextPath}/admin/subject">
+                        <a class="nav-link${pageContext.request.servletPath eq '/admin/subject' ? ' active' : ''}" href="${pageContext.request.contextPath}/admin/subject">
                             <i class="fas fa-book"></i> Subject Management
                         </a>
                         <a class="nav-link" href="#">
                             <i class="fas fa-users"></i> User Management
                         </a>
-                        <a class="nav-link" href="${pageContext.request.contextPath}/admin/quiz">
+                        <a class="nav-link${pageContext.request.servletPath eq '/admin/quiz' ? ' active' : ''}" href="${pageContext.request.contextPath}/admin/quiz">
                             <i class="fas fa-question-circle"></i> Quiz Management
+                        </a>
+                        <a class="nav-link${pageContext.request.servletPath eq '/admin/slider-list' ? ' active' : ''}" href="${pageContext.request.contextPath}/admin/slider-list">
+                            <i class="fas fa-sliders-h"></i> Slider Management
                         </a>
                         <a class="nav-link" href="#">
                             <i class="fas fa-chart-bar"></i> Reports
